@@ -1,0 +1,31 @@
+{
+    "name": "atoum/atoum-bundle",
+    "description": "Bundle around Atoum unit testing framework",
+    "type": "symfony-bundle",
+    "keywords": ["atoum", "test", "unit testing"],
+    "homepage": "https://github.com/atoum/AtoumBundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Florian Lonqueu-Brochard",
+            "email": "dev@florianlb.fr"
+        },
+        {
+        "name": "Community contributors",
+        "homepage": "https://github.com/atoum/AtoumBundle/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "symfony/framework-bundle": "2.*"
+    },
+    "suggest": {
+        "mageekguy/atoum": "Use atoum with composer"
+    },
+    "autoload": {
+        "psr-0": {
+            "Atoum\\AtoumBundle": ""
+        }
+    },
+    "target-dir": "Atoum/AtoumBundle"
+}
