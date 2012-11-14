@@ -19,6 +19,10 @@
         "php": ">=5.3.3",
         "symfony/framework-bundle": "2.*"
     },
+    "replace": {
+        "rezzza/atoum-bundle": "*",
+        "jedi/atoum-bundle": "*"
+    },
     "suggest": {
         "mageekguy/atoum": "Use atoum with composer"
     },
