@@ -28,8 +28,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Atoum\\AtoumBundle": ""
+            "atoum\\AtoumBundle": ""
         }
     },
-    "target-dir": "Atoum/AtoumBundle"
+    "target-dir": "atoum/AtoumBundle"
 }
