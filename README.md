@@ -1,7 +1,7 @@
 AtoumBundle
 ================
 
-This bundle provides a (very) simple integration of [Atoum](https://github.com/atoum/atoum), the unit testing framework, from [mageekguy](https://github.com/mageekguy) into Symfony2.
+This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the unit testing framework, from [mageekguy](https://github.com/mageekguy) into Symfony2.
 
 ## Installation
 
@@ -19,7 +19,7 @@ This bundle provides a (very) simple integration of [Atoum](https://github.com/a
 }
 ```
 
-### Composer & Atoum Phar
+### Composer & atoum Phar
 
 ```json
 {
@@ -29,7 +29,7 @@ This bundle provides a (very) simple integration of [Atoum](https://github.com/a
 }
 ```
 
-Download the [Atoum PHAR archive](http://downloads.atoum.org/nightly/mageekguy.atoum.phar).
+Download the [atoum PHAR archive](http://downloads.atoum.org/nightly/mageekguy.atoum.phar).
 
 ## Simple Usage
 
