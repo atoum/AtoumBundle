@@ -1,6 +1,6 @@
 {
     "name": "atoum/atoum-bundle",
-    "description": "Bundle around Atoum unit testing framework",
+    "description": "Bundle around atoum unit testing framework",
     "type": "symfony-bundle",
     "keywords": ["atoum", "test", "unit testing"],
     "homepage": "https://github.com/atoum/AtoumBundle",
@@ -28,8 +28,8 @@
     },
     "autoload": {
         "psr-0": {
-            "Atoum\\AtoumBundle": ""
+            "atoum\\AtoumBundle": ""
         }
     },
-    "target-dir": "Atoum/AtoumBundle"
+    "target-dir": "atoum/AtoumBundle"
 }

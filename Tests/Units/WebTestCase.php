@@ -1,6 +1,6 @@
 <?php
 
-namespace Atoum\AtoumBundle\Tests\Units;
+namespace atoum\AtoumBundle\Tests\Units;
 
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Finder\Finder;

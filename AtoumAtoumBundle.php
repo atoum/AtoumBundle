@@ -1,6 +1,6 @@
 <?php
 
-namespace Atoum\AtoumBundle;
+namespace atoum\AtoumBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
