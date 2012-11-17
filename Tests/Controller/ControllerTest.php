@@ -1,8 +1,8 @@
 <?php
 
-namespace Atoum\AtoumBundle\Tests\Controller;
+namespace atoum\AtoumBundle\Tests\Controller;
 
-use Atoum\AtoumBundle\Tests\Units\WebTestCase;
+use atoum\AtoumBundle\Tests\Units\WebTestCase;
 use mageekguy\atoum;
 
 abstract class ControllerTest extends WebTestCase

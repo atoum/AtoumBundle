@@ -1,7 +1,7 @@
 AtoumBundle
-================
+===========
 
-This bundle provides a (very) simple integration of [Atoum](https://github.com/atoum/atoum), the unit testing framework, from [mageekguy](https://github.com/mageekguy) into Symfony2.
+This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the unit testing framework, from [mageekguy](https://github.com/mageekguy) into Symfony2.
 
 ## Installation
 
@@ -19,7 +19,7 @@ This bundle provides a (very) simple integration of [Atoum](https://github.com/a
 }
 ```
 
-### Composer & Atoum Phar
+### Composer & atoum Phar
 
 ```json
 {
@@ -29,7 +29,7 @@ This bundle provides a (very) simple integration of [Atoum](https://github.com/a
 }
 ```
 
-Download the [Atoum PHAR archive](http://downloads.atoum.org/nightly/mageekguy.atoum.phar).
+Download the [atoum PHAR archive](http://downloads.atoum.org/nightly/mageekguy.atoum.phar).
 
 ## Simple Usage
 
@@ -46,7 +46,7 @@ require __DIR__ . '/../../../../../../../vendor/autoload.php';
 // use path of the atoum.phar as bello if you don't want to use atoum via composer
 //require_once __DIR__ . '/../../../../../vendor/mageekguy.atoum.phar';
 
-use Atoum\AtoumBundle\Tests\Units;
+use atoum\AtoumBundle\Tests\Units;
 
 class helloWorld extends Units\Test
 {
@@ -55,14 +55,14 @@ class helloWorld extends Units\Test
 
 ## Web test case
 
-You can create easily a kernel environment :
+You can create easily a kernel environment:
 
 ``` php
 <?php
 
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
 
-use Atoum\AtoumBundle\Tests\Units;
+use atoum\AtoumBundle\Tests\Units;
 
 class helloWorld extends Units\WebTestCase
 {
@@ -79,15 +79,15 @@ class helloWorld extends Units\WebTestCase
 
 ## Test a controller
 
-You can test your controller with the ControllerTest class (it extends WebTestCase) :
+You can test your controller with the ControllerTest class (it extends WebTestCase):
 
 ``` php
 <?php
 
 namespace vendor\FooBundle\Tests\Controller;
 
-use Atoum\AtoumBundle\Tests\Units\WebTestCase;
-use Atoum\AtoumBundle\Tests\Controller\ControllerTest;
+use atoum\AtoumBundle\Tests\Units\WebTestCase;
+use atoum\AtoumBundle\Tests\Controller\ControllerTest;
 
 class BarController extends ControllerTest
 {
