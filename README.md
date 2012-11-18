@@ -1,6 +1,8 @@
 AtoumBundle
 ===========
 
+[![Build Status](https://secure.travis-ci.org/atoum/AtoumBundle.png)](http://travis-ci.org/atoum/AtoumBundle)
+
 This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the unit testing framework, from [mageekguy](https://github.com/mageekguy) into Symfony2.
 
 ## Installation
