@@ -13,31 +13,16 @@ This bundle provides a (very) simple integration of [atoum](https://github.com/a
 {
     "require": {
         "atoum/atoum-bundle": "dev-master",
-        "mageekguy/atoum": "dev-master"
-    },
-    "config": {
-        "bin-dir": "bin"
-    }
-}
-```
-
-### Composer & atoum Phar
-
-```json
-{
-    "require": {
         "atoum/atoum-bundle": "dev-master"
     }
 }
 ```
 
-Download the [atoum PHAR archive](http://downloads.atoum.org/nightly/mageekguy.atoum.phar).
-
 ## Simple Usage
 
-Make your test class extends the `Tests\Units\Test` class of the bundle.
+Make your test class extends the `atoum\AtoumBundle\Test\Units\Test` class of the bundle.
 
-Don't forget to load this class with your favorite method (require, autoload, ...)
+Don't forget to load this class with your favorite method (require, autoload, ...).
 
 ``` php
 <?php
@@ -48,7 +33,7 @@ require __DIR__ . '/../../../../../../../vendor/autoload.php';
 // use path of the atoum.phar as bello if you don't want to use atoum via composer
 //require_once __DIR__ . '/../../../../../vendor/mageekguy.atoum.phar';
 
-use atoum\AtoumBundle\Tests\Units;
+use atoum\AtoumBundle\Test\Units;
 
 class helloWorld extends Units\Test
 {
@@ -64,7 +49,7 @@ You can create easily a kernel environment:
 
 require __DIR__ . '/../../../../../../../vendor/autoload.php';
 
-use atoum\AtoumBundle\Tests\Units;
+use atoum\AtoumBundle\Test\Units;
 
 class helloWorld extends Units\WebTestCase
 {
@@ -88,8 +73,8 @@ You can test your controller with the ControllerTest class (it extends WebTestCa
 
 namespace vendor\FooBundle\Tests\Controller;
 
-use atoum\AtoumBundle\Tests\Units\WebTestCase;
-use atoum\AtoumBundle\Tests\Controller\ControllerTest;
+use atoum\AtoumBundle\Test\Units\WebTestCase;
+use atoum\AtoumBundle\Test\Controller\ControllerTest;
 
 class BarController extends ControllerTest
 {
