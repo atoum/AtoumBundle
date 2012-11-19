@@ -10,3 +10,6 @@ before_script:
 
 script:
   - bin/atoum -d tests/units
+
+notifications:
+  irc: "irc.freenode.org##atoum"
