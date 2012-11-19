@@ -12,7 +12,6 @@ This bundle provides a (very) simple integration of [atoum](https://github.com/a
 ```json
 {
     "require": {
-        "atoum/atoum-bundle": "dev-master",
         "atoum/atoum-bundle": "dev-master"
     }
 }
