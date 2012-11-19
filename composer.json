@@ -17,19 +17,20 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "symfony/framework-bundle": "2.*"
+        "symfony/framework-bundle": "2.*",
+        "mageekguy/atoum": "dev-master"
     },
     "replace": {
         "rezzza/atoum-bundle": "*",
         "jedi/atoum-bundle": "*"
-    },
-    "suggest": {
-        "mageekguy/atoum": "Use atoum with composer"
     },
     "autoload": {
         "psr-0": {
             "atoum\\AtoumBundle": ""
         }
     },
-    "target-dir": "atoum/AtoumBundle"
+    "target-dir": "atoum/AtoumBundle",
+    "config": {
+        "bin-dir": "bin"
+    }
 }
