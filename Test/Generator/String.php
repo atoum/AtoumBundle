@@ -1,6 +1,6 @@
 <?php
 
-namespace atoum\AtoumBundle\Tests\Generator;
+namespace atoum\AtoumBundle\Test\Generator;
 
 class String
 {

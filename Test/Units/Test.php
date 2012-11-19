@@ -1,8 +1,8 @@
 <?php
 
-namespace atoum\AtoumBundle\Tests\Units;
+namespace atoum\AtoumBundle\Test\Units;
 
-use atoum\AtoumBundle\Tests\Generator;
+use atoum\AtoumBundle\Test\Generator;
 use mageekguy\atoum;
 
 abstract class Test extends atoum\test
