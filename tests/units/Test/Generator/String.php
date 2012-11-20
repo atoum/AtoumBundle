@@ -16,8 +16,16 @@ class String extends atoum\test
     {
         $testedString = new TestedString();
 
+        $string = $testedString->generate();
+        $this
+            ->string($string)
+            ->match('/^[a-zA-Z0-9]/')
+            ->hasLengthGreaterThan(7)
+            ->hasLengthLessThan(17)
+        ;
+
         $length = rand(5, 20);
-        $string = $testedString->generate($length, TestedString::CHARACTERS_ALPHANUMERIC);;
+        $string = $testedString->generate($length, TestedString::CHARACTERS_ALPHANUMERIC);
         $this
             ->string($string)
             ->match('/^[a-zA-Z0-9]/')
@@ -25,7 +33,7 @@ class String extends atoum\test
         ;
 
         $length = rand(5, 20);
-        $string = $testedString->generate($length, TestedString::CHARACTERS_ALPHA_LOWER);;
+        $string = $testedString->generate($length, TestedString::CHARACTERS_ALPHA_LOWER);
         $this
             ->string($string)
             ->match('/^[a-z]/')
@@ -33,7 +41,7 @@ class String extends atoum\test
         ;
 
         $length = rand(5, 20);
-        $string = $testedString->generate($length, TestedString::CHARACTERS_ALPHA_UPPER);;
+        $string = $testedString->generate($length, TestedString::CHARACTERS_ALPHA_UPPER);
         $this
             ->string($string)
             ->match('/^[A-Z]/')
@@ -41,7 +49,7 @@ class String extends atoum\test
         ;
 
         $length = rand(5, 20);
-        $string = $testedString->generate($length, TestedString::CHARACTERS_NUMERIC);;
+        $string = $testedString->generate($length, TestedString::CHARACTERS_NUMERIC);
         $this
             ->string($string)
             ->match('/^[0-9]/')
