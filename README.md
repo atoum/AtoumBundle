@@ -82,16 +82,19 @@ class BarController extends ControllerTest
     //test a json api method
     public function testGet()
     {
-        $client   = static::createClient();
-        $crawler  = $client->request('GET', '/api/foobar');
-        $response = $client->getResponse();
-
         $this
-            ->integer($response->getStatusCode())
-                ->isEqualTo(200)
-
-            ->string($response->headers->get('Content-Type'))
-                ->isEqualTo('application/json')
+            ->request('GET', '/api/foobar')
+            ->then
+                ->response
+                    ->hasStatusCode(200)
+                    ->hasHeader('Content-Type')->withValue('application/json')
+                    //...
+                ->crawler
+                    //...
+            ->request('POST', '/api/foobar')
+            ->then
+            ->response
+                ->hasStatusCode(405)
         ;
     }
 }
