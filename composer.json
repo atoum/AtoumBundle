@@ -18,6 +18,7 @@
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "2.*",
+        "symfony/finder": "2.*",
         "atoum/atoum": "dev-master"
     },
     "replace": {
