@@ -3,7 +3,8 @@ AtoumBundle
 
 [![Build Status](https://secure.travis-ci.org/atoum/AtoumBundle.png)](http://travis-ci.org/atoum/AtoumBundle)
 
-This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the unit testing framework, from [mageekguy](https://github.com/mageekguy) into Symfony2.
+This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the simple, modern and
+intuitive unit testing framework for PHP, from [mageekguy](https://github.com/mageekguy) into Symfony2.
 
 ## Installation
 
@@ -19,7 +20,7 @@ This bundle provides a (very) simple integration of [atoum](https://github.com/a
 
 ## Simple Usage
 
-Make your test class extends the `atoum\AtoumBundle\Test\Units\Test` class of the bundle.
+Make your test class extends the ```atoum\AtoumBundle\Test\Units\Test``` class of the bundle.
 
 Don't forget to load this class with your favorite method (require, autoload, ...).
 
@@ -41,7 +42,7 @@ class helloWorld extends Units\Test
 
 ## Web test case
 
-You can create easily a kernel environment:
+You can easily create a kernel environment:
 
 ``` php
 <?php
@@ -61,11 +62,12 @@ class helloWorld extends Units\WebTestCase
 
 ### Known issues
 
-- The path of the AppKernel cannot be find, override the method `getKernelDirectory` and add the path to your `app` directory.
+- The path of the AppKernel cannot be found, override the method ```getKernelDirectory```
+and add the path to your ```app``` directory.
 
 ## Test a controller
 
-You can test your controller with the ControllerTest class (it extends WebTestCase):
+You can test your controller with the ```ControllerTest``` class (it extends WebTestCase):
 
 ``` php
 <?php
