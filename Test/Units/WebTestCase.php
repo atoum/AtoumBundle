@@ -5,6 +5,7 @@ namespace atoum\AtoumBundle\Test\Units;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use atoum\AtoumBundle\Test\Asserters;
 
 /**
  * WebTestCase
@@ -14,8 +15,74 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 abstract class WebTestCase extends Test
 {
-    protected static $class;
-    protected static $kernel;
+    /** @var $string */
+    protected $class;
+
+    /** @var \Symfony\Component\HttpFoundation\HttpKernelInterface */
+    protected $kernel;
+
+    public function __construct(\mageekguy\atoum\factory $factory = null)
+    {
+        parent::__construct($factory);
+
+        $generator = $this->getAsserterGenerator();
+        $test = $this;
+        $crawler = null;
+        $client = null;
+
+        $this->getAssertionManager()
+            ->setHandler(
+                'request',
+                function(array $options = array(), array $server = array()) use(& $client, $test, $generator) {
+                    $client = $test->createClient($options, $server);
+
+                    return $test;
+                }
+            )
+            ->setHandler('get', $get = $this->getSendRequestHandler($client, $crawler, 'GET'))
+            ->setHandler('GET', $get)
+            ->setHandler('head', $head = $this->getSendRequestHandler($client, $crawler, 'HEAD'))
+            ->setHandler('HEAD', $head)
+            ->setHandler('post', $post = $this->getSendRequestHandler($client, $crawler, 'POST'))
+            ->setHandler('POST', $post)
+            ->setHandler('put', $put = $this->getSendRequestHandler($client, $crawler, 'PUT'))
+            ->setHandler('PUT', $put)
+            ->setHandler('delete', $delete = $this->getSendRequestHandler($client, $crawler, 'DELETE'))
+            ->setHandler('DELETE', $delete)
+            ->setHandler('options', $options = $this->getSendRequestHandler($client, $crawler, 'OPTIONS'))
+            ->setHandler('OPTIONS', $options)
+            ->setHandler(
+                'crawler',
+                function() use(& $crawler, $generator) {
+                    $asserter = new Asserters\Crawler($generator);
+
+                    return $asserter->setWith($crawler);
+                }
+            )
+        ;
+
+    }
+
+    /**
+     * @param \Symfony\Bundle\FrameworkBundle\Client $client
+     * @param \Symfony\Component\DomCrawler\Crawler  $crawler
+     * @param string                                 $method
+     *
+     * @return callable
+     */
+    protected function getSendRequestHandler(& $client, & $crawler, $method)
+    {
+        $generator = $this->getAsserterGenerator();
+
+        return function($path, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true) use(& $client, & $crawler, $method, $generator)
+        {
+            /** @var $client \Symfony\Bundle\FrameworkBundle\Client */
+            $crawler = $client->request($method, $path, $parameters, $files, $server, $content, $changeHistory);
+            $asserter = new Asserters\Response($generator);
+
+            return $asserter->setWith($client->getResponse());
+        };
+    }
 
     /**
      * Creates a Client.
@@ -25,16 +92,16 @@ abstract class WebTestCase extends Test
      *
      * @return Client A Client instance
      */
-    protected static function createClient(array $options = array(), array $server = array())
+    public function createClient(array $options = array(), array $server = array())
     {
-        if (null !== static::$kernel) {
-            static::$kernel->shutdown();
+        if (null !== $this->kernel) {
+            $this->kernel->shutdown();
         }
 
-        static::$kernel = static::createKernel($options);
-        static::$kernel->boot();
+        $this->kernel = $this->createKernel($options);
+        $this->kernel->boot();
 
-        $client = static::$kernel->getContainer()->get('test.client');
+        $client = $this->kernel->getContainer()->get('test.client');
         $client->setServerParameters($server);
 
         return $client;
@@ -52,13 +119,13 @@ abstract class WebTestCase extends Test
      *
      * @return HttpKernelInterface A HttpKernelInterface instance
      */
-    protected static function createKernel(array $options = array())
+    protected function createKernel(array $options = array())
     {
-        if (null === static::$class) {
-            static::$class = static::getKernelClass();
+        if (null === $this->class) {
+            $this->class = $this->getKernelClass();
         }
 
-        return new static::$class(
+        return new $this->class(
             isset($options['environment']) ? $options['environment'] : 'test',
             isset($options['debug']) ? $options['debug'] : true
         );
@@ -71,7 +138,7 @@ abstract class WebTestCase extends Test
      *
      * @return string The Kernel class name
      */
-    protected static function getKernelClass()
+    protected function getKernelClass()
     {
         $dir = self::getKernelDirectory();
 
@@ -95,7 +162,7 @@ abstract class WebTestCase extends Test
      *
      * @return string
      */
-    protected static function getKernelDirectory()
+    protected function getKernelDirectory()
     {
         $dir = getcwd().'/app';
         if (!is_dir($dir)) {
