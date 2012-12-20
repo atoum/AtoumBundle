@@ -1,7 +1,7 @@
 <?php
 namespace atoum\AtoumBundle\tests\units\Test\Asserters;
 
-require_once __DIR__ . '/../../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 use mageekguy\atoum;
 use mageekguy\atoum\asserter;

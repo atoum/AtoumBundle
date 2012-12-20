@@ -2,7 +2,7 @@
 
 namespace atoum\AtoumBundle\tests\units\Test\Generator;
 
-require_once __DIR__ . '/../../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 use \mageekguy\atoum;
 use atoum\AtoumBundle\Test\Generator\String as TestedString;
