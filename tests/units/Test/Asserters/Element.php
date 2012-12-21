@@ -24,7 +24,8 @@ class Element extends atoum\test
                 ->object($object->getLocale())->isIdenticalTo($generator->getLocale())
                 ->object($object->getGenerator())->isIdenticalTo($generator)
                 ->object($object->getParent())->isIdenticalTo($parent)
-                ->integer($object->getCount())->isEqualTo(1)
+                ->integer($object->getAtLeast())->isEqualTo(1)
+                ->variable($object->getExactly())->isNull()
                 ->variable($object->getAttributes())->isNull()
                 ->variable($object->getContent())->isNull()
         ;
@@ -90,7 +91,28 @@ class Element extends atoum\test
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
                 ->object($object->exactly($count))->isIdenticalTo($object)
-                ->integer($object->getCount())->isIdenticalTo($count)
+                ->integer($object->getExactly())->isIdenticalTo($count)
+        ;
+    }
+
+    public function testHasChild()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
+            ->and($object->setWith($crawler))
+            ->then
+                ->exception(function() use($object) {
+                    $object->hasChild(uniqid());
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least 1 element(s), found 0.')))
+            ->if($this->calling($crawler)->count = 1)
+            ->then
+                ->object($element = $object->hasChild(uniqid()))->isInstanceOf('\\atoum\\AtoumBundle\\Test\\Asserters\\Element')
+                ->object($element->getParent())->isIdenticalTo($object)
         ;
     }
 
@@ -101,25 +123,42 @@ class Element extends atoum\test
             ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
-            ->and($this->calling($crawler)->count = $count = rand(2, PHP_INT_MAX))
+            ->and($this->calling($crawler)->count = 0)
             ->and($object->setWith($crawler))
             ->then
                 ->exception(function() use($object) {
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), $count, $object->getCount()))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 1, 0))
             ->if($this->calling($crawler)->count = 1)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
-            ->if($object->exactly($count))
+            ->if($object->atLeast(2))
             ->then
                 ->exception(function() use($object) {
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), 1, $count))
-            ->if($this->calling($crawler)->count = $count)
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 2, 1))
+            ->if($this->calling($crawler)->count = 3)
+            ->then
+                ->object($object->end())->isIdenticalTo($parent)
+            ->if($object->atMost(2))
+            ->then
+                ->exception(function() use($object) {
+                    $object->end();
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at most %d element(s), found %d.'), 2, 3))
+            ->if($object->exactly(2))
+            ->then
+                ->exception(function() use($object) {
+                    $object->end();
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), 3, 2))
+            ->if($this->calling($crawler)->count = 2)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
 
@@ -127,8 +166,8 @@ class Element extends atoum\test
             ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($this->mockGenerator()->shuntParentClassCalls())
-            ->and($elem = new \mock\DOMElement(uniqid()))
-            ->and($otherElem = new \mock\DOMElement(uniqid()))
+                ->and($elem = new \mock\DOMElement(uniqid()))
+                ->and($otherElem = new \mock\DOMElement(uniqid()))
             ->and($this->mockGenerator()->unshuntParentClassCalls())
             ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($elem, $otherElem)))
             ->and($object->setWith($crawler))
@@ -138,7 +177,7 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), 0, 1))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 1, 0))
             ->if($this->calling($elem)->hasAttribute = true)
             ->and($this->calling($elem)->getAttribute = $value)
             ->then

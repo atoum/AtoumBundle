@@ -12,14 +12,16 @@ class Element extends asserters\object
     private $parent;
     private $content;
     private $attributes;
-    private $count;
+    private $exactly;
+    private $atLeast;
+    private $atMost;
 
     public function __construct(asserter\generator $generator, $parent)
     {
         parent::__construct($generator);
 
         $this->parent = $parent;
-        $this->count = 1;
+        $this->atLeast = 1;
     }
 
     public function getParent()
@@ -55,14 +57,7 @@ class Element extends asserters\object
             $nodes = $this->filterAttributes($nodes);
         }
 
-        if (count($nodes) !== $this->count)
-        {
-            $this->fail(sprintf($this->getLocale()->_('Found %d element(s) instead of %d'), count($nodes), $this->count));
-        }
-        else
-        {
-            $this->pass();
-        }
+        $this->assertCount($nodes);
 
         return $this->parent;
     }
@@ -79,6 +74,17 @@ class Element extends asserters\object
         return $this->content;
     }
 
+    protected function filterContent($value)
+    {
+        $content = $this->content;
+
+        return $value->reduce(
+            function($node) use($content) {
+                return ($node->nodeValue === $content);
+            }
+        );
+    }
+
     public function withAttribute($name, $value)
     {
         $this->attributes[$name] = $value;
@@ -89,29 +95,6 @@ class Element extends asserters\object
     public function getAttributes()
     {
         return $this->attributes;
-    }
-
-    public function exactly($count)
-    {
-        $this->count = $count;
-
-        return $this;
-    }
-
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    protected function filterContent($value)
-    {
-        $content = $this->content;
-
-        return $value->reduce(
-            function($node) use($content) {
-                return ($node->nodeValue === $content);
-            }
-        );
     }
 
     protected function filterAttributes($value)
@@ -131,8 +114,100 @@ class Element extends asserters\object
         );
     }
 
+    protected function assertCount($value)
+    {
+        if ($this->exactly !== null) {
+            $this->assertExactly($value);
+        } else {
+            if($this->atLeast !== null) {
+                $this->assertAtLeast($value);
+            }
+
+            if($this->atMost !== null) {
+                $this->assertAtMost($value);
+            }
+        }
+
+        return $this;
+    }
+
+    public function exactly($count)
+    {
+        $this->atLeast = null;
+        $this->atMost = null;
+        $this->exactly = $count;
+
+        return $this;
+    }
+
+    public function getExactly()
+    {
+        return $this->exactly;
+    }
+
+    protected function assertExactly($value)
+    {
+        if (count($value) !== $this->exactly) {
+            $this->fail(sprintf($this->getLocale()->_('Found %d element(s) instead of %d'), count($value), $this->exactly));
+        } else {
+            $this->pass();
+        }
+
+        return $this;
+    }
+
+    public function atLeast($count)
+    {
+        $this->exactly = null;
+        $this->atLeast = $count;
+
+        return $this;
+    }
+
+    public function getAtLeast()
+    {
+        return $this->atLeast;
+    }
+
+    protected function assertAtLeast($value, $failMessage = null)
+    {
+        if (count($value) >= $this->atLeast) {
+            $this->pass();
+        } else {
+            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Expected at least %d element(s), found %d.'), $this->atLeast, count($value)));
+        }
+
+        return $this;
+    }
+
+    public function atMost($count)
+    {
+        $this->exactly = null;
+        $this->atMost = $count;
+
+        return $this;
+    }
+
+    public function getAtMost()
+    {
+        return $this->atMost;
+    }
+
+    protected function assertAtMost($value, $failMessage = null)
+    {
+        if (count($value) <= $this->atMost) {
+            $this->pass();
+        } else {
+            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Expected at most %d element(s), found %d.'), $this->atMost, count($value)));
+        }
+
+        return $this;
+    }
+
     public function hasChild($element)
     {
+        $this->assertAtLeast($this->valueIsSet()->value);
+
         $asserter = new Element($this->getGenerator(), $this);
         $asserter->setWith($this->valueIsSet()->value->filter($element));
 
