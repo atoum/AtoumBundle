@@ -200,4 +200,33 @@ class Response extends atoum\test
                 ->object($object->hasTtl($ttl))->isIdenticalTo($object)
         ;
     }
+
+    public function testHasHeader()
+    {
+        $this
+            ->if($object = new \mock\atoum\AtoumBundle\Test\Asserters\Response($generator = new asserter\generator()))
+            ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
+            ->and($headers = new \mock\Symfony\Component\HttpFoundation\HeaderBag())
+            ->and($this->calling($object)->getHeaders = $headers)
+            ->and($object->setWith($response))
+            ->and($header = uniqid())
+            ->and($value = uniqid())
+            ->then
+                ->exception(function() use($object, $header, $value) {
+                    $object->hasHeader($header, $value);
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Value null is not equal to %s for header %s'), $object->getTypeOf($value), $header))
+            ->if($this->calling($headers)->get = $actual = uniqid())
+            ->then
+                ->exception(function() use($object, $header, $value) {
+                    $object->hasHeader($header, $value);
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Value %s is not equal to %s for header %s'), $object->getTypeOf($actual), $object->getTypeOf($value), $header))
+            ->if($this->calling($headers)->get = $value)
+            ->then
+                ->object($object->hasHeader($header, $value))->isIdenticalTo($object)
+        ;
+    }
 }

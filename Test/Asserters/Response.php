@@ -141,6 +141,25 @@ class Response extends asserters\object
         return $this;
     }
 
+    public function hasHeader($name, $value, $failMessage = null)
+    {
+        if (($actual = $this->getHeaders()->get($name)) !== $value)
+        {
+            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Value %s is not equal to %s for header %s'), $this->getTypeOf($actual), $this->getTypeOf($value), $name));
+        }
+        else
+        {
+            $this->pass();
+        }
+
+        return $this;
+    }
+
+    public function getHeaders()
+    {
+        return $this->valueIsSet()->value->headers;
+    }
+
     protected static function isResponse($value)
     {
         return ($value instanceof \Symfony\Component\HttpFoundation\Response);
