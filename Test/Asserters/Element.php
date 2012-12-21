@@ -5,7 +5,6 @@ namespace atoum\AtoumBundle\Test\Asserters;
 use mageekguy\atoum;
 use mageekguy\atoum\asserter;
 use mageekguy\atoum\asserters;
-use mageekguy\atoum\exceptions;
 
 class Element extends asserters\object
 {
@@ -33,12 +32,9 @@ class Element extends asserters\object
     {
         parent::setWith($value, false);
 
-        if (self::isCrawler($this->value) === false)
-        {
+        if (self::isCrawler($this->value) === false) {
             $this->fail(sprintf($this->getLocale()->_('%s is not a crawler'), $this));
-        }
-        else
-        {
+        } else {
             $this->pass();
         }
 
@@ -79,7 +75,7 @@ class Element extends asserters\object
         $content = $this->content;
 
         return $value->reduce(
-            function($node) use($content) {
+            function($node) use ($content) {
                 return ($node->nodeValue === $content);
             }
         );
@@ -102,7 +98,7 @@ class Element extends asserters\object
         $attributes = $this->attributes;
 
         return $value->reduce(
-            function($node) use($attributes) {
+            function($node) use ($attributes) {
                 foreach ($attributes as $name => $value) {
                     if (false === $node->hasAttribute($name) || $value !== $node->getAttribute($name)) {
                         return false;
@@ -119,11 +115,11 @@ class Element extends asserters\object
         if ($this->exactly !== null) {
             $this->assertExactly($value);
         } else {
-            if($this->atLeast !== null) {
+            if ($this->atLeast !== null) {
                 $this->assertAtLeast($value);
             }
 
-            if($this->atMost !== null) {
+            if ($this->atMost !== null) {
                 $this->assertAtMost($value);
             }
         }

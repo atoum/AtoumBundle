@@ -33,7 +33,7 @@ abstract class WebTestCase extends Test
         $this->getAssertionManager()
             ->setHandler(
                 'request',
-                function(array $options = array(), array $server = array()) use(& $client, $test, $generator) {
+                function(array $options = array(), array $server = array()) use (& $client, $test, $generator) {
                     $client = $test->createClient($options, $server);
 
                     return $test;
@@ -53,7 +53,7 @@ abstract class WebTestCase extends Test
             ->setHandler('OPTIONS', $options)
             ->setHandler(
                 'crawler',
-                function() use(& $crawler, $generator) {
+                function() use (& $crawler, $generator) {
                     $asserter = new Asserters\Crawler($generator);
 
                     return $asserter->setWith($crawler);
@@ -74,8 +74,7 @@ abstract class WebTestCase extends Test
     {
         $generator = $this->getAsserterGenerator();
 
-        return function($path, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true) use(& $client, & $crawler, $method, $generator)
-        {
+        return function($path, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true) use (& $client, & $crawler, $method, $generator) {
             /** @var $client \Symfony\Bundle\FrameworkBundle\Client */
             $crawler = $client->request($method, $path, $parameters, $files, $server, $content, $changeHistory);
             $asserter = new Asserters\Response($generator);
