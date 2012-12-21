@@ -79,19 +79,33 @@ use atoum\AtoumBundle\Test\Controller\ControllerTest;
 
 class BarController extends ControllerTest
 {
-    //test a json api method
     public function testGet()
     {
-        $client   = static::createClient();
-        $crawler  = $client->request('GET', '/api/foobar');
-        $response = $client->getResponse();
-
         $this
-            ->integer($response->getStatusCode())
-                ->isEqualTo(200)
-
-            ->string($response->headers->get('Content-Type'))
-                ->isEqualTo('application/json')
+            ->request(array('debug' => true))
+                ->GET('/demo/' . uniqid())
+                    ->hasStatus(404)
+                    ->hasCharset('UTF-8')
+                    ->hasVersion('1.1')
+                ->POST('/demo/contact')
+                    ->hasStatus(200)
+                    ->hasHeader('Content-Type', 'text/html; charset=UTF-8')
+                    ->crawler
+                        ->hasElement('#contact_form')
+                            ->hasChild('input')->exactly(3)->end()
+                            ->hasChild('input')
+                                ->withAttribute('type', 'email')
+                                ->withAttribute('name', 'contact[email]')
+                            ->end()
+                            ->hasChild('input[type=submit]')
+                                ->withAttribute('value', 'Send')
+                            ->end()
+                            ->hasChild('textarea')->end()
+                        ->end()
+                        ->hasElement('li')
+                            ->withContent('The CSRF token is invalid. Please try to resubmit the form.')
+                            ->exactly(1)
+                        ->end()
         ;
     }
 }
