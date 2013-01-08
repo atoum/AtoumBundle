@@ -15,6 +15,7 @@
         "homepage": "https://github.com/atoum/AtoumBundle/graphs/contributors"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
         "symfony/framework-bundle": "2.*",
