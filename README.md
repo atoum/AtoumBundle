@@ -55,7 +55,7 @@ class helloWorld extends Units\WebTestCase
 {
     public function testMyTralala()
     {
-        $client = self::createClient();
+        $client = $this->createClient();
     }
 }
 ```
