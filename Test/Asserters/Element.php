@@ -10,8 +10,9 @@ use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 class Element extends asserters\object
 {
     private $parent;
+    private $selector;
     private $content;
-    private $attributes;
+    private $attributes = array();
     private $exactly;
     private $atLeast;
     private $atMost;
@@ -30,7 +31,7 @@ class Element extends asserters\object
         return $this->parent;
     }
 
-    public function setWith($value)
+    public function setWith($value, $selector = null)
     {
         parent::setWith($value, false);
 
@@ -40,10 +41,12 @@ class Element extends asserters\object
             $this->pass();
         }
 
+        $this->selector = $selector;
+
         return $this;
     }
 
-    public function end()
+    public function end($failMessage = null)
     {
         $nodes = $this->valueIsSet()->value;
 
@@ -51,7 +54,7 @@ class Element extends asserters\object
             $nodes = $this->filterContent($nodes);
         }
 
-        if (isset($this->attributes)) {
+        if (count($this->attributes)) {
             $nodes = $this->filterAttributes($nodes);
         }
 
@@ -59,7 +62,7 @@ class Element extends asserters\object
             $nodes = $this->filterChild($nodes);
         }
 
-        $this->assertCount($nodes);
+        $this->assertCount($nodes, $failMessage);
 
         return $this->parent;
     }
@@ -94,8 +97,8 @@ class Element extends asserters\object
         $content = $this->content;
 
         return $value->reduce(
-            function($node) use ($content) {
-                return ($node->nodeValue === $content);
+            function(\DOMNode $node) use ($content) {
+                return (@$node->nodeValue === $content);
             }
         );
     }
@@ -134,7 +137,7 @@ class Element extends asserters\object
         $this->assertAtLeast($this->valueIsSet()->value);
 
         $asserter = new Element($this->getGenerator(), $this);
-        $asserter->setWith($this->valueIsSet()->value->filter($element));
+        $asserter->setWith($this->valueIsSet()->value->filter($element), $element);
 
         return $asserter;
     }
@@ -175,17 +178,17 @@ class Element extends asserters\object
         );
     }
 
-    protected function assertCount($value)
+    protected function assertCount(DomCrawler $value, $failMessage = null)
     {
         if ($this->exactly !== null) {
-            $this->assertExactly($value);
+            $this->assertExactly($value, $failMessage);
         } else {
             if ($this->atLeast !== null) {
-                $this->assertAtLeast($value);
+                $this->assertAtLeast($value, $failMessage);
             }
 
             if ($this->atMost !== null) {
-                $this->assertAtMost($value);
+                $this->assertAtMost($value, $failMessage);
             }
         }
 
@@ -206,10 +209,17 @@ class Element extends asserters\object
         return $this->exactly;
     }
 
-    protected function assertExactly($value)
+    protected function assertExactly(DomCrawler $value, $failMessage = null)
     {
         if (count($value) !== $this->exactly) {
-            $this->fail(sprintf($this->getLocale()->_('Found %d element(s) instead of %d'), count($value), $this->exactly));
+            $this->fail(
+                $failMessage !== null ? $failMessage : sprintf(
+                    $this->getLocale()->_('Expected %d element(s) matching %s, found %d.'),
+                    $this->exactly,
+                    $this->getPattern(),
+                    count($value)
+                )
+            );
         } else {
             $this->pass();
         }
@@ -230,12 +240,19 @@ class Element extends asserters\object
         return $this->atLeast;
     }
 
-    protected function assertAtLeast($value, $failMessage = null)
+    protected function assertAtLeast(DomCrawler $value, $failMessage = null)
     {
         if (count($value) >= $this->atLeast) {
             $this->pass();
         } else {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Expected at least %d element(s), found %d.'), $this->atLeast, count($value)));
+            $this->fail(
+                $failMessage !== null ? $failMessage : sprintf(
+                    $this->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'),
+                    $this->atLeast,
+                    $this->getPattern(),
+                    count($value)
+                )
+            );
         }
 
         return $this;
@@ -254,15 +271,37 @@ class Element extends asserters\object
         return $this->atMost;
     }
 
-    protected function assertAtMost($value, $failMessage = null)
+    protected function assertAtMost(DomCrawler $value, $failMessage = null)
     {
         if (count($value) <= $this->atMost) {
             $this->pass();
         } else {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Expected at most %d element(s), found %d.'), $this->atMost, count($value)));
+            $this->fail(
+                $failMessage !== null ? $failMessage : sprintf(
+                    $this->getLocale()->_('Expected at most %d element(s) matching %s, found %d.'),
+                    $this->atMost,
+                    $this->getPattern(),
+                    count($value)
+                )
+            );
         }
 
         return $this;
+    }
+
+    protected function getPattern()
+    {
+        $attributes = '';
+        foreach ($this->attributes as $name => $val) {
+            $attributes .= '[' . $name . '="' . $val . '"]';
+        }
+
+        return sprintf(
+            $this->getLocale()->_('%s%s%s'),
+            $this->selector ?: '*',
+            $attributes,
+            $this->getContent() ? '[@content="' . $this->getContent() . '"]' : ''
+        );
     }
 
     protected static function isCrawler($value)

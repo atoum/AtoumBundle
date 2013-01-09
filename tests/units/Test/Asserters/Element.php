@@ -26,7 +26,7 @@ class Element extends atoum\test
                 ->object($object->getParent())->isIdenticalTo($parent)
                 ->integer($object->getAtLeast())->isEqualTo(1)
                 ->variable($object->getExactly())->isNull()
-                ->variable($object->getAttributes())->isNull()
+                ->array($object->getAttributes())->isEmpty()
                 ->variable($object->getContent())->isNull()
                 ->variable($object->getChildCount())->isNull()
         ;
@@ -185,7 +185,7 @@ class Element extends atoum\test
                     $object->hasChild(uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least 1 element(s), found 0.')))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*', 0))
             ->if($this->calling($crawler)->count = 1)
             ->then
                 ->object($element = $object->hasChild(uniqid()))->isInstanceOf('\\atoum\\AtoumBundle\\Test\\Asserters\\Element')
@@ -207,7 +207,7 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 1, 0))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*', 0))
             ->if($this->calling($crawler)->count = 1)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
@@ -217,7 +217,7 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 2, 1))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 2, '*', 1))
             ->if($this->calling($crawler)->count = 3)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
@@ -227,14 +227,14 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at most %d element(s), found %d.'), 2, 3))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at most %d element(s) matching %s, found %d.'), 2, '*', 3))
             ->if($object->exactly(2))
             ->then
                 ->exception(function() use($object) {
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), 3, 2))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*', 3))
             ->if($this->calling($crawler)->count = 2)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
@@ -254,17 +254,26 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 1, 0))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*[' . $attr . '="' . $value . '"]', 0))
             ->if($this->calling($elem)->hasAttribute = true)
             ->and($this->calling($elem)->getAttribute = $value)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
             ->if($object->exactly(2))
+            ->then
                 ->exception(function() use($object) {
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), 1, 2))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*[' . $attr . '="' . $value . '"]', 1))
+            ->if($object->withContent($content = uniqid()))
+            ->then
+                ->exception(function() use($object) {
+                    $object->end();
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*[' . $attr . '="' . $value . '"][@content="' . $content . '"]', 0))
+
         ;
     }
 }
