@@ -5,6 +5,7 @@ namespace atoum\AtoumBundle\Test\Asserters;
 use mageekguy\atoum;
 use mageekguy\atoum\asserter;
 use mageekguy\atoum\asserters;
+use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class Element extends asserters\object
 {
@@ -14,6 +15,7 @@ class Element extends asserters\object
     private $exactly;
     private $atLeast;
     private $atMost;
+    private $childCount;
 
     public function __construct(asserter\generator $generator, $parent)
     {
@@ -53,9 +55,26 @@ class Element extends asserters\object
             $nodes = $this->filterAttributes($nodes);
         }
 
+        if (null !== $this->childCount) {
+            $nodes = $this->filterChild($nodes);
+        }
+
         $this->assertCount($nodes);
 
         return $this->parent;
+    }
+
+    public function isEmpty($failMessage = null)
+    {
+        return $this
+            ->hasNoContent()
+            ->hasNoChild()
+        ;
+    }
+
+    public function hasNoContent()
+    {
+        return $this->withContent('');
     }
 
     public function withContent($content)
@@ -70,7 +89,7 @@ class Element extends asserters\object
         return $this->content;
     }
 
-    protected function filterContent($value)
+    protected function filterContent(DomCrawler $value)
     {
         $content = $this->content;
 
@@ -93,12 +112,12 @@ class Element extends asserters\object
         return $this->attributes;
     }
 
-    protected function filterAttributes($value)
+    protected function filterAttributes(DomCrawler $value)
     {
         $attributes = $this->attributes;
 
         return $value->reduce(
-            function($node) use ($attributes) {
+            function(\DOMNode $node) use ($attributes) {
                 foreach ($attributes as $name => $value) {
                     if (false === $node->hasAttribute($name) || $value !== $node->getAttribute($name)) {
                         return false;
@@ -106,6 +125,52 @@ class Element extends asserters\object
                 }
 
                 return true;
+            }
+        );
+    }
+
+    public function hasChild($element)
+    {
+        $this->assertAtLeast($this->valueIsSet()->value);
+
+        $asserter = new Element($this->getGenerator(), $this);
+        $asserter->setWith($this->valueIsSet()->value->filter($element));
+
+        return $asserter;
+    }
+
+    public function hasChildExactly($count)
+    {
+        $this->childCount = $count;
+
+        return $this;
+    }
+
+    public function hasNoChild()
+    {
+        return $this->hasChildExactly(0);
+    }
+
+    public function getChildCount()
+    {
+        return $this->childCount;
+    }
+
+    protected function filterChild(DomCrawler $value)
+    {
+        $count = $this->childCount;
+
+        return $value->reduce(
+            function(\DOMNode $node) use ($count) {
+                $nodes = 0;
+
+                foreach ($node->childNodes as $child) {
+                    if (false === $child instanceof \DOMText) {
+                        $nodes++;
+                    }
+                }
+
+                return $nodes === $count;
             }
         );
     }
@@ -200,18 +265,8 @@ class Element extends asserters\object
         return $this;
     }
 
-    public function hasChild($element)
-    {
-        $this->assertAtLeast($this->valueIsSet()->value);
-
-        $asserter = new Element($this->getGenerator(), $this);
-        $asserter->setWith($this->valueIsSet()->value->filter($element));
-
-        return $asserter;
-    }
-
     protected static function isCrawler($value)
     {
-        return ($value instanceof \Symfony\Component\DomCrawler\Crawler);
+        return ($value instanceof DomCrawler);
     }
 }

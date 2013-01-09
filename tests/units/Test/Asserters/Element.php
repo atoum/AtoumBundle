@@ -28,6 +28,7 @@ class Element extends atoum\test
                 ->variable($object->getExactly())->isNull()
                 ->variable($object->getAttributes())->isNull()
                 ->variable($object->getContent())->isNull()
+                ->variable($object->getChildCount())->isNull()
         ;
     }
 
@@ -63,6 +64,18 @@ class Element extends atoum\test
         ;
     }
 
+    public function testHasNoContent()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->then
+                ->object($object->hasNoContent())->isIdenticalTo($object)
+                ->string($object->getContent())->isEmpty()
+        ;
+    }
+
     public function testWithAttibute()
     {
         $this
@@ -92,6 +105,70 @@ class Element extends atoum\test
             ->then
                 ->object($object->exactly($count))->isIdenticalTo($object)
                 ->integer($object->getExactly())->isIdenticalTo($count)
+        ;
+    }
+
+    public function testAtMost()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->and($count = rand(0, PHP_INT_MAX))
+            ->then
+                ->object($object->atMost($count))->isIdenticalTo($object)
+                ->integer($object->getAtMost())->isIdenticalTo($count)
+        ;
+    }
+
+    public function testAtLeast()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->and($count = rand(0, PHP_INT_MAX))
+            ->then
+                ->object($object->atLeast($count))->isIdenticalTo($object)
+                ->integer($object->getAtLeast())->isIdenticalTo($count)
+        ;
+    }
+
+    public function testHasNoChild()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->then
+                ->object($object->hasNoChild())->isIdenticalTo($object)
+                ->integer($object->getChildCount())->isEqualTo(0)
+        ;
+    }
+
+    public function testHasChildCount()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->and($count = rand(0, PHP_INT_MAX))
+            ->then
+                ->object($object->hasChildExactly($count))->isIdenticalTo($object)
+                ->integer($object->getChildCount())->isEqualTo($count)
+        ;
+    }
+
+    public function testIsEmpty()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->then
+                ->object($object->isEmpty())->isIdenticalTo($object)
+                ->integer($object->getChildCount())->isEqualTo(0)
+                ->string($object->getContent())->isEmpty()
         ;
     }
 
