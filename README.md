@@ -27,10 +27,10 @@ Don't forget to load this class with your favorite method (require, autoload, ..
 ``` php
 <?php
 
-//if you don't use a bootstrap file, you need to require the autoload
-require __DIR__ . '/../../../../../../../vendor/autoload.php';
+//if you don't use a bootstrap file, you need to require the application autoload
+require __DIR__ . '/../../../../../../../app/autoload.php';
 
-// use path of the atoum.phar as bello if you don't want to use atoum via composer
+// use path of the atoum.phar as bellow if you don't want to use atoum via composer
 //require_once __DIR__ . '/../../../../../vendor/mageekguy.atoum.phar';
 
 use atoum\AtoumBundle\Test\Units;
@@ -47,7 +47,7 @@ You can easily create a kernel environment:
 ``` php
 <?php
 
-require __DIR__ . '/../../../../../../../vendor/autoload.php';
+require __DIR__ . '/../../../../../../../app/autoload.php';
 
 use atoum\AtoumBundle\Test\Units;
 
