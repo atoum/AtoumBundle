@@ -18,6 +18,16 @@ intuitive unit testing framework for PHP, from [mageekguy](https://github.com/ma
 }
 ```
 
+In most of the cases you don't need AtoumBundle in your production environment.
+
+```json
+{
+    "require-dev": {
+        "atoum/atoum-bundle": "dev-master"
+    }
+}
+```  
+
 ## Simple Usage
 
 Make your test class extends the ```atoum\AtoumBundle\Test\Units\Test``` class of the bundle.
