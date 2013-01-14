@@ -1,5 +1,6 @@
 * master (next 1.1.0)
 
+  * Add command to launch tests on bundles.
   * Add fluent interface for controllers testing
   * Compatibility break (static $kernel variable become a class variable)
 

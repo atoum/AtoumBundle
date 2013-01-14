@@ -110,3 +110,32 @@ class BarController extends ControllerTest
     }
 }
 ```
+
+## Command
+
+AtoumBundle is provided with a Symfony command. You can launch atoum tests on specific bundles.
+
+You have to define AtoumBundle on `AppKernel`
+
+```php
+$bundles[] = new atoum\AtoumBundle\AtoumAtoumBundle();
+```
+
+```shell
+$ php app/console atoum FooBundle --env=test # launch tests of FooBundle
+$ php app/console atoum FooBundle BarBundle --env=test # launch tests of FooBundle and BarBundle
+$ php app/console atoum acme_foo --env=test # launch tests of bundle where alias is acme_foo
+$ php app/console atoum --env=test # launch tests from configuration.
+```
+
+### Configuration
+
+Define your bundles on configuration:
+
+```yaml
+atoum:
+    bundles:
+        FooBundle: ~ # FooBundle is defined with directories Tests/Units, Tests/Controller
+        BarBundle:
+            directories: [Tests/Units, Tests/Functional, ...]
+```

@@ -35,6 +35,11 @@ Launch tests of AcmeFooBundle:
 Launch tests of many bundles:
 
 <comment>./app/console atoum AcmeFooBundle bundle_alias_extension ...</comment>
+
+Launch tests of all bundles defined on configuration:
+
+<comment>./app/console atoum</comment>
+
 EOF
             )
             ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
