@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use atoum\AtoumBundle\Configuration\Bundle as BundleConfiguration;
 use mageekguy\atoum\scripts\runner;
 
 /**
@@ -47,42 +48,89 @@ EOF
     {
         $runner = new runner('atoum');
 
-        foreach ($input->getArgument('bundles') as $name) {
-            $bundle = $this->extractBundleFromKernel($name);
-
-            $runner->addTestAllDirectory(sprintf('%s/Tests/Units', $bundle->getPath()));
+        $bundles = $input->getArgument('bundles');
+        if (count($bundles) > 0) {
+            $self = $this;
+            $bundles = array_map(function($v) use ($self) {
+                return $self->extractBundleConfigurationFromKernel($v);
+            }, $bundles);
+        } else {
+            $bundles = $this->getContainer()->get('atoum.configuration.bundle.container')->all();
         }
 
-        $runner->run(array(
-            '--test-all'
-        ));
+        foreach ($bundles as $bundle) {
+            $directories = array_filter($bundle->getDirectories(), function($dir) {
+                return is_dir($dir);
+            });
+
+            if (empty($directories)) {
+                $output->writeln(sprintf('<error>There is no test found on "%s".</error>', $bundle->getName()));
+            }
+
+            foreach ($directories as $directory) {
+                $runner->addTestAllDirectory($directory);
+            }
+        }
+
+        if (count($runner->getTestAllDirectories()) == 0) {
+            $output->writeln('<error>There is no test to launch.</error>');
+        } else {
+            $runner->run(array(
+                '--test-all'
+            ));
+        }
     }
 
     /**
      * @param string $name name
      *
-     * @return Bundle
+     * @return BundleConfiguration
      */
-    protected function extractBundleFromKernel($name)
+    public function extractBundleConfigurationFromKernel($name)
     {
-        $bundles = $this->getContainer()->get('kernel')->getBundles();
+        $kernelBundles = $this->getContainer()->get('kernel')->getBundles();
+        $bundle        = null;
 
         if (preg_match('/Bundle$/', $name)) {
-            if (!isset($bundles[$name])) {
+            if (!isset($kernelBundles[$name])) {
                 throw new \LogicException(sprintf('Bundle "%s" does not exists or is not activated.', $name));
             }
 
-            return $bundles[$name];
+            $bundle = $kernelBundles[$name];
         } else {
-            foreach ($bundles as $bundle) {
-                $extension = $bundle->getContainerExtension();
+            foreach ($kernelBundles as $kernelBundle) {
+                $extension = $kernelBundle->getContainerExtension();
 
                 if ($extension && $extension->getAlias() == $name) {
-                    return $bundle;
+                    $bundle = $kernelBundle;
+                    break;
                 }
             }
 
-            throw new \LogicException(sprintf('Bundle with alias "%s" does not exists or is not activated.', $name));
+            if (null === $bundle) {
+                throw new \LogicException(sprintf('Bundle with alias "%s" does not exists or is not activated.', $name));
+            }
         }
+
+        $bundleContainer = $this->getContainer()->get('atoum.configuration.bundle.container');
+
+        if ($bundleContainer->has($bundle->getName())) {
+            return $bundleContainer->get($bundle->getName());
+        } else {
+            return new BundleConfiguration($bundle->getName(), $this->getDefaultDirectoriesForBundle($bundle));
+        }
+    }
+
+    /**
+     * @param Bundle $bundle bundle
+     *
+     * @return array
+     */
+    public function getDefaultDirectoriesForBundle(Bundle $bundle)
+    {
+        return array(
+            sprintf('%s/Tests/Units', $bundle->getPath()),
+            sprintf('%s/Tests/Controller', $bundle->getPath()),
+        );
     }
 }
