@@ -2,27 +2,35 @@
 
 namespace atoum\AtoumBundle\Test\Units;
 
-use atoum\AtoumBundle\Test\Generator;
 use mageekguy\atoum;
 
 abstract class Test extends atoum\test
 {
-    /**
-     * @param atoum\factory $factory factory
-     */
-    public function __construct(atoum\factory $factory = null)
+    public function __construct(atoum\adapter $adapter = null, atoum\annotations\extractor $annotationExtractor = null, atoum\asserter\generator $asserterGenerator = null, atoum\test\assertion\manager $assertionManager = null, \closure $reflectionClassFactory = null)
     {
         $this->setTestNamespace('Tests\Units');
-        parent::__construct($factory);
+
+        parent::__construct($adapter, $annotationExtractor, $asserterGenerator, $assertionManager, $reflectionClassFactory);
     }
 
-    public function setAssertionManager(test\assertion\manager $assertionManager = null)
+    public function setAssertionManager(atoum\test\assertion\manager $assertionManager = null)
     {
-        $faker = \Faker\Factory::create();
+        $self = $this;
 
-        return parent::setAssertionManager($assertionManager)
+        $returnFaker = function($locale = 'en_US') use ($self) {
+            return $self->getFaker($locale);
+        };
+
+        parent::setAssertionManager($assertionManager)
             ->getAssertionManager()
-                ->setHandler('faker', function() use($faker) { return $faker; })
+                ->setHandler('faker', $returnFaker)
         ;
+
+        return $this;
+    }
+
+    public function getFaker($locale = 'en_US')
+    {
+        return \Faker\Factory::create($locale);
     }
 }

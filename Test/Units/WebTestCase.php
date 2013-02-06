@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use atoum\AtoumBundle\Test\Asserters;
+use mageekguy\atoum;
 
 /**
  * WebTestCase
@@ -21,9 +22,9 @@ abstract class WebTestCase extends Test
     /** @var \Symfony\Component\HttpFoundation\HttpKernelInterface */
     protected $kernel;
 
-    public function __construct(\mageekguy\atoum\factory $factory = null)
+    public function __construct(atoum\adapter $adapter = null, atoum\annotations\extractor $annotationExtractor = null, atoum\asserter\generator $asserterGenerator = null, atoum\test\assertion\manager $assertionManager = null, \closure $reflectionClassFactory = null)
     {
-        parent::__construct($factory);
+        parent::__construct($adapter, $annotationExtractor, $asserterGenerator, $assertionManager, $reflectionClassFactory);
 
         $generator = $this->getAsserterGenerator();
         $test = $this;
