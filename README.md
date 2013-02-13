@@ -26,7 +26,7 @@ In most of the cases you don't need AtoumBundle in your production environment.
         "atoum/atoum-bundle": "dev-master"
     }
 }
-```  
+```
 
 ## Simple Usage
 
@@ -128,7 +128,10 @@ AtoumBundle is provided with a Symfony command. You can launch atoum tests on sp
 You have to define AtoumBundle on `AppKernel`
 
 ```php
-$bundles[] = new atoum\AtoumBundle\AtoumAtoumBundle();
+if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+    //.....
+    $bundles[] = new atoum\AtoumBundle\AtoumAtoumBundle();
+}
 ```
 
 ```shell
