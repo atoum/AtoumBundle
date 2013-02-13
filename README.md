@@ -152,3 +152,22 @@ atoum:
         BarBundle:
             directories: [Tests/Units, Tests/Functional, ...]
 ```
+
+## Faker data
+
+AtoumBundle integrates with [Faker](https://github.com/fzaninotto/Faker) library.
+
+In your tests classes, you have access to a ```Faker\Generator``` instance with the ```faker``` asserter.
+
+```php
+public function testMyAmazingFeature()
+{
+    //.....
+    $randomName = $this->faker->name;
+
+    $dateTimeBetweenYesterdayAndNow = $this->faker->dateTimeBetween('-1 day', 'now');
+    //.....
+}
+```
+
+See [Faker's documentation](https://github.com/fzaninotto/Faker#basic-usage) about its usage.
