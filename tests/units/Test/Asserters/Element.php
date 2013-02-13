@@ -26,8 +26,9 @@ class Element extends atoum\test
                 ->object($object->getParent())->isIdenticalTo($parent)
                 ->integer($object->getAtLeast())->isEqualTo(1)
                 ->variable($object->getExactly())->isNull()
-                ->variable($object->getAttributes())->isNull()
+                ->array($object->getAttributes())->isEmpty()
                 ->variable($object->getContent())->isNull()
+                ->variable($object->getChildCount())->isNull()
         ;
     }
 
@@ -63,6 +64,18 @@ class Element extends atoum\test
         ;
     }
 
+    public function testHasNoContent()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->then
+                ->object($object->hasNoContent())->isIdenticalTo($object)
+                ->string($object->getContent())->isEmpty()
+        ;
+    }
+
     public function testWithAttibute()
     {
         $this
@@ -95,6 +108,70 @@ class Element extends atoum\test
         ;
     }
 
+    public function testAtMost()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->and($count = rand(0, PHP_INT_MAX))
+            ->then
+                ->object($object->atMost($count))->isIdenticalTo($object)
+                ->integer($object->getAtMost())->isIdenticalTo($count)
+        ;
+    }
+
+    public function testAtLeast()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->and($count = rand(0, PHP_INT_MAX))
+            ->then
+                ->object($object->atLeast($count))->isIdenticalTo($object)
+                ->integer($object->getAtLeast())->isIdenticalTo($count)
+        ;
+    }
+
+    public function testHasNoChild()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->then
+                ->object($object->hasNoChild())->isIdenticalTo($object)
+                ->integer($object->getChildCount())->isEqualTo(0)
+        ;
+    }
+
+    public function testHasChildCount()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->and($count = rand(0, PHP_INT_MAX))
+            ->then
+                ->object($object->hasChildExactly($count))->isIdenticalTo($object)
+                ->integer($object->getChildCount())->isEqualTo($count)
+        ;
+    }
+
+    public function testIsEmpty()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+            ->then
+                ->object($object->isEmpty())->isIdenticalTo($object)
+                ->integer($object->getChildCount())->isEqualTo(0)
+                ->string($object->getContent())->isEmpty()
+        ;
+    }
+
     public function testHasChild()
     {
         $this
@@ -108,7 +185,7 @@ class Element extends atoum\test
                     $object->hasChild(uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least 1 element(s), found 0.')))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*', 0))
             ->if($this->calling($crawler)->count = 1)
             ->then
                 ->object($element = $object->hasChild(uniqid()))->isInstanceOf('\\atoum\\AtoumBundle\\Test\\Asserters\\Element')
@@ -130,7 +207,7 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 1, 0))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*', 0))
             ->if($this->calling($crawler)->count = 1)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
@@ -140,7 +217,7 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 2, 1))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 2, '*', 1))
             ->if($this->calling($crawler)->count = 3)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
@@ -150,14 +227,14 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at most %d element(s), found %d.'), 2, 3))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at most %d element(s) matching %s, found %d.'), 2, '*', 3))
             ->if($object->exactly(2))
             ->then
                 ->exception(function() use($object) {
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), 3, 2))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*', 3))
             ->if($this->calling($crawler)->count = 2)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
@@ -177,17 +254,26 @@ class Element extends atoum\test
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s), found %d.'), 1, 0))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*[' . $attr . '="' . $value . '"]', 0))
             ->if($this->calling($elem)->hasAttribute = true)
             ->and($this->calling($elem)->getAttribute = $value)
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
             ->if($object->exactly(2))
+            ->then
                 ->exception(function() use($object) {
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Found %d element(s) instead of %d'), 1, 2))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*[' . $attr . '="' . $value . '"]', 1))
+            ->if($object->withContent($content = uniqid()))
+            ->then
+                ->exception(function() use($object) {
+                    $object->end();
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*[' . $attr . '="' . $value . '"][@content="' . $content . '"]', 0))
+
         ;
     }
 }

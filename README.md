@@ -116,6 +116,15 @@ class BarController extends ControllerTest
                             ->withContent('The CSRF token is invalid. Please try to resubmit the form.')
                             ->exactly(1)
                         ->end()
+                        ->hasElement('title')
+                            ->hasNoChild()
+                        ->end()
+                        ->hasElement('meta')
+                            ->hasNoContent()
+                        ->end()
+                        ->hasElement('link')
+                            ->isEmpty()
+                        ->end()
         ;
     }
 }

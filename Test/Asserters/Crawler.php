@@ -25,7 +25,7 @@ class Crawler extends asserters\object
     {
         $asserter = new Element($this->generator, $this);
 
-        return $asserter->setWith($this->valueIsSet()->value->filter($element));
+        return $asserter->setWith($this->valueIsSet()->value->filter($element), $element);
     }
 
     protected static function isCrawler($value)
