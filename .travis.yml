@@ -1,15 +1,22 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
+    - 5.3
+    - 5.4
+
+env:
+    global:
+        - secure: "UYfS6EFy1L5QUh85SxxAoAGiSc2T9vohO//FU6p3f+Lnc5tbEzsQndP4C6qK\nS4qZIey5Qozz8wyvNBoe2W6uJLvrPdABxxkp/UTj5DO6iA7sYaP9JZ98uiXW\nxtNgnSTIM2V+FW/bOcBYToksoOkuCnErohETD9BrkQ5buRuVAaw="
 
 before_script:
-  - wget http://getcomposer.org/composer.phar
-  - php composer.phar install --dev
+    - mkdir ~/.composer
+    - "[ ! -z $GITHUB_TOKEN ] && echo \"{ \\\"config\\\": { \\\"github-oauth\\\": { \\\"github.com\\\": \\\"$GITHUB_TOKEN\\\" } } }\" > ~/.composer/config.json"
+    - wget http://getcomposer.org/composer.phar
+    - "[ ! -z $GITHUB_TOKEN ] && php composer.phar install --dev"
+    - "[ ! -z $GITHUB_TOKEN ] || php composer.phar install --dev --prefer-source"
 
 script:
-  - bin/atoum --test-all
+    - bin/atoum --test-all
 
 notifications:
-  irc: "irc.freenode.org##atoum"
+    irc: "irc.freenode.org##atoum"
