@@ -140,7 +140,7 @@ abstract class WebTestCase extends Test
      */
     protected function getKernelClass()
     {
-        $dir = self::getKernelDirectory();
+        $dir = $this->getKernelDirectory();
 
         $finder = new Finder();
         $finder->name('*Kernel.php')->depth(0)->in($dir);
