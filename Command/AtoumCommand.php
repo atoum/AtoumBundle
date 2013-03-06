@@ -20,6 +20,11 @@ use mageekguy\atoum\scripts\runner;
 class AtoumCommand extends ContainerAwareCommand
 {
     /**
+     * @var array List of atoum CLI runner arguments
+     */
+    private $atoumArguments = array();
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -43,6 +48,7 @@ Launch tests of all bundles defined on configuration:
 EOF
             )
             ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
+            ->addOption('bootstrap-file', 'bf',InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
             ;
     }
 
@@ -80,10 +86,44 @@ EOF
         if (count($runner->getTestAllDirectories()) == 0) {
             $output->writeln('<error>There is no test to launch.</error>');
         } else {
-            $runner->run(array(
-                '--test-all'
-            ));
+            $defaultBootstrap =  sprintf('%s/autoload.php', $this->getApplication()->getKernel()->getRootDir());
+            $bootstrap = $input->getOption('bootstrap-file') ?: $defaultBootstrap;
+
+            $this->setAtoumArgument('--test-all');
+            $this->setAtoumArgument('--bootstrap-file', $bootstrap);
+
+            $runner->run($this->getAtoumArguments());
         }
+    }
+
+    /**
+     * Set an atoum CLI argument
+     *
+     * @param string $name
+     * @param string $values
+     */
+    protected function setAtoumArgument($name, $values = null)
+    {
+        $this->atoumArguments[$name] = $values;
+    }
+
+    /**
+     * Return inlined atoum cli arguments
+     *
+     * @return array
+     */
+    protected function getAtoumArguments()
+    {
+        $inlinedArguments = array();
+
+        foreach ($this->atoumArguments as $name => $values) {
+            $inlinedArguments[] = $name;
+            if (null !== $values) {
+                $inlinedArguments[] = $values;
+            }
+        }
+
+        return $inlinedArguments;
     }
 
     /**
