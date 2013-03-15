@@ -13,7 +13,7 @@ intuitive unit testing framework for PHP, from [mageekguy](https://github.com/ma
 ```json
 {
     "require": {
-        "atoum/atoum-bundle": "dev-master"
+        "atoum/atoum-bundle": "*@dev"
     }
 }
 ```
@@ -23,7 +23,7 @@ In most of the cases you don't need AtoumBundle in your production environment.
 ```json
 {
     "require-dev": {
-        "atoum/atoum-bundle": "dev-master"
+        "atoum/atoum-bundle": "*@dev"
     }
 }
 ```
