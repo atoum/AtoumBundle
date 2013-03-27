@@ -131,4 +131,10 @@ class Response extends asserters\object
     {
         return ($value instanceof \Symfony\Component\HttpFoundation\Response);
     }
+
+    public function dumpResponse()
+    {
+        $this->dump($this->getValue()->getContent());
+        return $this;
+    }
 }
