@@ -7,5 +7,5 @@ namespace atoum\AtoumBundle\Annotation;
  */
 interface Clean
 {
-    public function getCleaningServiceName();
+    public function getEventName();
 }

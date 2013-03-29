@@ -18,13 +18,4 @@ abstract class CleanableControllerTest extends ControllerTest
         $cleanerManager = $container->get('atoum.manager.cleaning');
         $cleanerManager->process($this, $method);
     }
-
-    public function preCleaning()
-    {
-    }
-
-    public function postCleaning()
-    {
-    }
-
 }

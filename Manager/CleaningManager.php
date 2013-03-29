@@ -3,8 +3,9 @@
 namespace atoum\AtoumBundle\Manager;
 
 use Doctrine\Common\Annotations\Reader;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use atoum\AtoumBundle\Test\Controller\CleanableControllerTest;
+use atoum\AtoumBundle\Event\CleanEvent;
 use ReflectionMethod;
 
 class CleaningManager
@@ -17,14 +18,14 @@ class CleaningManager
     protected $reader;
 
     /**
-     * @var ContainerInterface
+     * @var ContainerAwareEventDispatcher
      */
-    protected $container;
+    protected $eventDispatcher;
 
-    public function __construct(Reader $reader, ContainerInterface $container)
+    public function __construct(Reader $reader, EventDispatcherInterface $eventDispatcher)
     {
         $this->reader    = $reader;
-        $this->container = $container;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function process(CleanableControllerTest $object, $method)
@@ -43,15 +44,10 @@ class CleaningManager
                 continue;
             }
 
-            $cleanerName = $annot->getCleaningServiceName();
-
-            if (!$this->container->has($cleanerName)) {
-                continue;
-            }
-
-            $cleaner = $this->container->get($cleanerName);
-
-            $cleaner->clean($object, $annot);
+            $this->eventDispatcher->dispatch(
+                $annot->getEventName(),
+                new CleanEvent($object, $annot)
+            );
         }
     }
 }
