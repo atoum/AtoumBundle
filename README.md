@@ -3,17 +3,17 @@ AtoumBundle
 
 [![Build Status](https://secure.travis-ci.org/atoum/AtoumBundle.png)](http://travis-ci.org/atoum/AtoumBundle)
 
-This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the simple, modern and
-intuitive unit testing framework for PHP, from [mageekguy](https://github.com/mageekguy) into Symfony2.
+This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the simple, modern and intuitive unit testing framework for PHP, from [mageekguy](https://github.com/mageekguy) into Symfony2.
 
 ## Installation
 
-### All with composer
+## 1 - With composer
 
 ```json
 {
     "require": {
-        "atoum/atoum-bundle": "*@dev"
+        "atoum/atoum": "dev-master",
+        "atoum/atoum-bundle": "dev-master"
     }
 }
 ```
@@ -23,22 +23,64 @@ In most of the cases you don't need AtoumBundle in your production environment.
 ```json
 {
     "require-dev": {
-        "atoum/atoum-bundle": "*@dev"
+        "atoum/atoum": "dev-master",
+        "atoum/atoum-bundle": "dev-master"
     }
 }
+```
+
+Don't forget to add Atoum, too!
+
+## 2 - Command
+
+AtoumBundle is provided with a Symfony command. You can launch atoum tests on specific bundles.
+
+### 2-a Registering in the kernel
+
+You have to define AtoumBundle on `AppKernel`
+
+```php
+if (in_array($this->getEnvironment(), array('dev', 'test'))) {
+    //.....
+    $bundles[] = new atoum\AtoumBundle\AtoumAtoumBundle();
+}
+```
+
+### 2-b Configuration
+
+Define your bundles on configuration (if you want to use it only in test environment, in `config_test.yml` only):
+
+```yaml
+atoum:
+    bundles:
+        # note that the full name, including vendor, is required
+        AcmeFooBundle: ~ # FooBundle is defined with directories Tests/Units, Tests/Controller
+        MeBarBundle:
+            directories: [Tests/Units, Tests/Functional, ...]
+```
+
+### 2-c Command-line usage
+
+Then you can use:
+
+```shell
+$ php app/console atoum FooBundle --env=test # launch tests of FooBundle
+$ php app/console atoum FooBundle BarBundle --env=test # launch tests of FooBundle and BarBundle
+$ php app/console atoum acme_foo --env=test # launch tests of bundle where alias is acme_foo
+$ php app/console atoum --env=test # launch tests from configuration.
 ```
 
 ## Simple Usage
 
 Make your test class extends the ```atoum\AtoumBundle\Test\Units\Test``` class of the bundle.
 
-Don't forget to load this class with your favorite method (require, autoload, ...).
+*Don't forget to load this class with your favorite method (require, autoload, ...) if you don't use composer.*
 
-``` php
+```php
 <?php
 
-//if you don't use a bootstrap file, you need to require the application autoload
-require __DIR__ . '/../../../../../../../app/autoload.php';
+// if you don't use a bootstrap file, (or composer) you need to require the application autoload
+//require __DIR__ . '/../../../../../../../app/autoload.php';
 
 // use path of the atoum.phar as bellow if you don't want to use atoum via composer
 //require_once __DIR__ . '/../../../../../vendor/mageekguy.atoum.phar';
@@ -54,7 +96,7 @@ class helloWorld extends Units\Test
 
 You can easily create a kernel environment:
 
-``` php
+```php
 <?php
 
 require __DIR__ . '/../../../../../../../app/autoload.php';
@@ -77,9 +119,9 @@ and add the path to your ```app``` directory.
 
 ## Test a controller
 
-You can test your controller with the ```ControllerTest``` class (it extends WebTestCase):
+You can test your controller with the ```ControllerTest``` class (it extends `WebTestCase` - each file must correspond to a Symfony2 controller):
 
-``` php
+```php
 <?php
 
 namespace vendor\FooBundle\Tests\Controller;
@@ -128,38 +170,6 @@ class BarController extends ControllerTest
         ;
     }
 }
-```
-
-## Command
-
-AtoumBundle is provided with a Symfony command. You can launch atoum tests on specific bundles.
-
-You have to define AtoumBundle on `AppKernel`
-
-```php
-if (in_array($this->getEnvironment(), array('dev', 'test'))) {
-    //.....
-    $bundles[] = new atoum\AtoumBundle\AtoumAtoumBundle();
-}
-```
-
-```shell
-$ php app/console atoum FooBundle --env=test # launch tests of FooBundle
-$ php app/console atoum FooBundle BarBundle --env=test # launch tests of FooBundle and BarBundle
-$ php app/console atoum acme_foo --env=test # launch tests of bundle where alias is acme_foo
-$ php app/console atoum --env=test # launch tests from configuration.
-```
-
-### Configuration
-
-Define your bundles on configuration:
-
-```yaml
-atoum:
-    bundles:
-        FooBundle: ~ # FooBundle is defined with directories Tests/Units, Tests/Controller
-        BarBundle:
-            directories: [Tests/Units, Tests/Functional, ...]
 ```
 
 ## Faker data
