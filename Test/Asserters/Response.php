@@ -137,4 +137,13 @@ class Response extends asserters\object
         $this->dump($this->getValue()->getContent());
         return $this;
     }
+
+    public function hasText($text)
+    {
+        if (false !== strpos($this->getValue()->getContent(), $text)) {
+            $this->pass();
+        } else {
+            $this->fail("text : '".$text. "' wasn't found in the response");
+        }
+    }
 }
