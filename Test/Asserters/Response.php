@@ -138,12 +138,12 @@ class Response extends asserters\object
         return $this;
     }
 
-    public function hasText($text)
+    public function contains($text, $failMessage = null)
     {
         if (false !== strpos($this->getValue()->getContent(), $text)) {
             $this->pass();
         } else {
-            $this->fail("text : '".$text. "' wasn't found in the response");
+            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_("text : '%s' wasn't found in the response"), $text));
         }
     }
 }
