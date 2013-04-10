@@ -79,8 +79,11 @@ Make your test class extends the ```atoum\AtoumBundle\Test\Units\Test``` class o
 ```php
 <?php
 
+// src/Acme/MyBundle/Tests/Units/Entity/HelloWorld.php
+
+namespace Acme\MyBundle\Tests\Units\Entity;
 // if you don't use a bootstrap file, (or composer) you need to require the application autoload
-//require __DIR__ . '/../../../../../../../app/autoload.php';
+//require __DIR__ . '/../../../../../../app/autoload.php';
 
 // use path of the atoum.phar as bellow if you don't want to use atoum via composer
 //require_once __DIR__ . '/../../../../../vendor/mageekguy.atoum.phar';
