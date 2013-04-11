@@ -145,5 +145,6 @@ class Response extends asserters\object
         } else {
             $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_("text : '%s' wasn't found in the response"), $text));
         }
+        return $this;
     }
 }
