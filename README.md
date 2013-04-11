@@ -29,8 +29,6 @@ In most of the cases you don't need AtoumBundle in your production environment.
 }
 ```
 
-Don't forget to add Atoum, too!
-
 ## 2 - Command
 
 AtoumBundle is provided with a Symfony command. You can launch atoum tests on specific bundles.
