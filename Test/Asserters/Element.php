@@ -92,6 +92,22 @@ class Element extends asserters\object
         return $this->content;
     }
 
+    public function hasContent()
+    {
+        $value = $this->valueIsSet()->value;
+
+        $nodes = $value->reduce(
+            function(\DOMNode $node) {
+                return ($node->nodeValue != '');
+            }
+        );
+
+        $this->assertCount($nodes, $this->getLocale()->_('Expected any content, found an empty value.'));
+
+        return $this;
+    }
+
+
     protected function filterContent(DomCrawler $value)
     {
         $content = $this->content;
