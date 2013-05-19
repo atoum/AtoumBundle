@@ -76,6 +76,29 @@ class Element extends atoum\test
         ;
     }
 
+    public function testHasContent()
+    {
+        $this
+            ->if($generator = new asserter\generator())
+            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($object = new TestedClass($generator, $parent))
+                ->and($elem = new \mock\DOMElement(uniqid('_'), 'a value'))
+            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($elem)))
+            ->and($object->setWith($crawler))
+            ->then
+                ->object($object->hasContent())->isIdenticalTo($object)
+            ->if($emptyElem = new \mock\DOMElement(uniqid('_'), ''))
+            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($emptyElem)))
+            ->and($object->setWith($crawler))
+            ->then
+                ->exception(function() use($object) {
+                    $object->hasContent();
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected any content, found an empty value.')))
+        ;
+    }
+
     public function testWithAttibute()
     {
         $this
