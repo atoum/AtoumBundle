@@ -3,6 +3,7 @@ namespace atoum\AtoumBundle\tests\units\Test\Asserters;
 
 require_once __DIR__ . '/../../../bootstrap.php';
 
+use atoum\AtoumBundle\Test\Asserters\Crawler as CrawlerAssert;
 use mageekguy\atoum;
 use mageekguy\atoum\asserter;
 use atoum\AtoumBundle\Test\Asserters\Element as TestedClass;
@@ -18,7 +19,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->then
                 ->object($object->getLocale())->isIdenticalTo($generator->getLocale())
@@ -36,7 +37,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($value = uniqid())
             ->then
@@ -45,7 +46,7 @@ class Element extends atoum\test
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('%s is not a crawler'), $object->getTypeOf($value)))
-            ->if($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
+            ->if($crawler = new \Symfony\Component\DomCrawler\Crawler())
             ->then
                 ->object($object->setWith($crawler))->isIdenticalTo($object)
         ;
@@ -55,7 +56,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($content = uniqid())
             ->then
@@ -68,7 +69,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->then
                 ->object($object->hasNoContent())->isIdenticalTo($object)
@@ -80,15 +81,15 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
-                ->and($elem = new \mock\DOMElement(uniqid('_'), 'a value'))
-            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($elem)))
+            ->and($elem = new \DOMElement(uniqid('_'), 'a value'))
+            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($elem)))
             ->and($object->setWith($crawler))
             ->then
                 ->object($object->hasContent())->isIdenticalTo($object)
-            ->if($emptyElem = new \mock\DOMElement(uniqid('_'), ''))
-            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($emptyElem)))
+            ->if($emptyElem = new \DOMElement(uniqid('_'), ''))
+            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($emptyElem)))
             ->and($object->setWith($crawler))
             ->then
                 ->exception(function() use($object) {
@@ -103,7 +104,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($attribute = uniqid())
             ->and($value = uniqid())
@@ -122,7 +123,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
@@ -135,7 +136,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
@@ -148,7 +149,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
@@ -161,7 +162,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->then
                 ->object($object->hasNoChild())->isIdenticalTo($object)
@@ -173,7 +174,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
@@ -186,7 +187,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->then
                 ->object($object->isEmpty())->isIdenticalTo($object)
@@ -199,7 +200,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
             ->and($object->setWith($crawler))
@@ -220,7 +221,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
             ->and($this->calling($crawler)->count = 0)
@@ -263,13 +264,12 @@ class Element extends atoum\test
                 ->object($object->end())->isIdenticalTo($parent)
 
             ->if($generator = new asserter\generator())
-            ->and($parent = new \mock\atoum\AtoumBundle\Test\Asserters\Crawler($generator))
+            ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
             ->and($this->mockGenerator()->shuntParentClassCalls())
-                ->and($elem = new \mock\DOMElement(uniqid()))
-                ->and($otherElem = new \mock\DOMElement(uniqid()))
-            ->and($this->mockGenerator()->unshuntParentClassCalls())
-            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($elem, $otherElem)))
+            ->and($elem = new \mock\DOMElement(uniqid('_')))
+            ->and($otherElem = new \DOMElement(uniqid('_')))
+            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($elem, $otherElem)))
             ->and($object->setWith($crawler))
             ->and($object->withAttribute($attr = uniqid(), $value = uniqid()))
             ->then
