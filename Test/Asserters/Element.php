@@ -51,7 +51,10 @@ class Element extends asserters\object
         $nodes = $this->valueIsSet()->value;
 
         if (isset($this->content)) {
-            $nodes = $this->filterContent($nodes);
+            $content = $this->getContent();
+            $nodes = $this->reduce(function($value) use ($content) {
+                return ($value == $content);
+            });
         }
 
         if (count($this->attributes)) {
@@ -94,11 +97,9 @@ class Element extends asserters\object
 
     public function hasContent()
     {
-        $value = $this->valueIsSet()->value;
-
-        $nodes = $value->reduce(
-            function(\DOMNode $node) {
-                return ($node->nodeValue != '');
+        $nodes = $this->reduce(
+            function($value) {
+                return ($value != '');
             }
         );
 
@@ -108,13 +109,23 @@ class Element extends asserters\object
     }
 
 
-    protected function filterContent(DomCrawler $value)
+    protected function reduce(\Closure $closure)
     {
-        $content = $this->content;
+        $value = $this->valueIsSet()->value;
 
         return $value->reduce(
-            function(\DOMNode $node) use ($content) {
-                return (@$node->nodeValue === $content);
+            function($node) use ($closure) {
+                $value = null;
+
+                if($node instanceof \DOMNode) {
+                    $value = @$node->nodeValue;
+                }
+
+                if($node instanceof DomCrawler) {
+                    $value = $node->text();
+                }
+
+                return $closure($value);
             }
         );
     }
