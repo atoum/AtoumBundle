@@ -97,6 +97,30 @@ class Element extends atoum\test
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected any content, found an empty value.')))
+            ->if($elem = new \DOMElement(uniqid('_'), 'ab value'))
+            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($elem)))
+            ->and($this->calling($crawler)->reduce = function(\Closure $closure) use ($elem) {
+                $value = array();
+                if(false !== $closure($elem)) {
+                    $value[] = $elem;
+                }
+
+                return new \mock\Symfony\Component\DomCrawler\Crawler($value);
+            })
+            ->and($object->setWith($crawler))
+            ->then
+                ->object($object->hasContent())->isIdenticalTo($object)
+            ->if($this->calling($crawler)->reduce = function(\Closure $closure) use ($elem, & $tempCrawler) {
+                $value = array();
+                if(false !== $closure($tempCrawler = new \mock\Symfony\Component\DomCrawler\Crawler($elem))) {
+                    $value[] = $elem;
+                }
+
+                return new \mock\Symfony\Component\DomCrawler\Crawler($value);
+            })
+            ->then
+                ->object($object->hasContent())->isIdenticalTo($object)
+                ->mock($tempCrawler)->call('text')->once()
         ;
     }
 
