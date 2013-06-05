@@ -70,7 +70,7 @@ class Element extends asserters\object
         return $this->parent;
     }
 
-    public function isEmpty()
+    public function isEmpty($failMessage = null)
     {
         return $this
             ->hasNoContent()
