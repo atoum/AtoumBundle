@@ -2,6 +2,7 @@
 
 namespace atoum\AtoumBundle\Test\Asserters;
 
+use atoum\AtoumBundle\DomCrawler\DOMNode;
 use mageekguy\atoum;
 use mageekguy\atoum\asserter;
 use mageekguy\atoum\asserters;
@@ -52,9 +53,12 @@ class Element extends asserters\object
 
         if (isset($this->content)) {
             $content = $this->getContent();
-            $nodes = $this->reduce(function($value) use ($content) {
-                return ($value == $content);
-            });
+            $nodes = $this->reduce(
+                $nodes,
+                function(DOMNode $node) use ($content) {
+                    return ($node->text() == $content);
+                }
+            );
         }
 
         if (count($this->attributes)) {
@@ -98,8 +102,9 @@ class Element extends asserters\object
     public function hasContent()
     {
         $nodes = $this->reduce(
-            function($value) {
-                return ($value != '');
+            $this->valueIsSet()->value,
+            function(DOMNode $node) {
+                return ($node->text() != '');
             }
         );
 
@@ -109,23 +114,11 @@ class Element extends asserters\object
     }
 
 
-    protected function reduce(\Closure $closure)
+    protected function reduce(DomCrawler $nodes, \Closure $closure)
     {
-        $value = $this->valueIsSet()->value;
-
-        return $value->reduce(
+        return $nodes->reduce(
             function($node) use ($closure) {
-                $value = null;
-
-                if($node instanceof \DOMNode) {
-                    $value = @$node->nodeValue;
-                }
-
-                if($node instanceof DomCrawler) {
-                    $value = $node->text();
-                }
-
-                return $closure($value);
+                return $closure(new DOMNode($node));
             }
         );
     }
@@ -142,14 +135,15 @@ class Element extends asserters\object
         return $this->attributes;
     }
 
-    protected function filterAttributes(DomCrawler $value)
+    protected function filterAttributes(DomCrawler $nodes)
     {
         $attributes = $this->attributes;
 
-        return $value->reduce(
-            function(\DOMNode $node) use ($attributes) {
+        return $this->reduce(
+            $nodes,
+            function(DOMNode $node) use ($attributes) {
                 foreach ($attributes as $name => $value) {
-                    if (false === $node->hasAttribute($name) || $value !== $node->getAttribute($name)) {
+                    if ($value !== $node->attr($name)) {
                         return false;
                     }
                 }
@@ -186,15 +180,16 @@ class Element extends asserters\object
         return $this->childCount;
     }
 
-    protected function filterChild(DomCrawler $value)
+    protected function filterChild(DomCrawler $nodes)
     {
         $count = $this->childCount;
 
-        return $value->reduce(
-            function(\DOMNode $node) use ($count) {
+        return $this->reduce(
+            $nodes,
+            function(DOMNode $node) use ($count) {
                 $nodes = 0;
 
-                foreach ($node->childNodes as $child) {
+                foreach ($node->children() as $child) {
                     if (false === $child instanceof \DOMText) {
                         $nodes++;
                     }

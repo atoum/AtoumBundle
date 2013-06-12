@@ -244,6 +244,7 @@ class Element extends atoum\test
     public function testEnd()
     {
         $this
+            ->given($document = new \DOMDocument())
             ->if($generator = new asserter\generator())
             ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
@@ -290,20 +291,18 @@ class Element extends atoum\test
             ->if($generator = new asserter\generator())
             ->and($parent = new CrawlerAssert($generator))
             ->and($object = new TestedClass($generator, $parent))
-            ->and($this->mockGenerator()->shuntParentClassCalls())
-            ->and($elem = new \mock\DOMElement(uniqid('_')))
-            ->and($otherElem = new \DOMElement(uniqid('_')))
+            ->and($elem = $document->createElement(uniqid('_')))
+            ->and($otherElem = $document->createElement(uniqid('_')))
             ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($elem, $otherElem)))
             ->and($object->setWith($crawler))
-            ->and($object->withAttribute($attr = uniqid(), $value = uniqid()))
+            ->and($object->withAttribute($attr = uniqid('_'), $value = uniqid()))
             ->then
                 ->exception(function() use($object) {
                     $object->end();
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*[' . $attr . '="' . $value . '"]', 0))
-            ->if($this->calling($elem)->hasAttribute = true)
-            ->and($this->calling($elem)->getAttribute = $value)
+            ->if($elem->setAttribute($attr, $value))
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
             ->if($object->exactly(2))
@@ -320,7 +319,6 @@ class Element extends atoum\test
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*[' . $attr . '="' . $value . '"][@content="' . $content . '"]', 0))
-
         ;
     }
 }
