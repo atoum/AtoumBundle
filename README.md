@@ -63,6 +63,7 @@ Then you can use:
 
 ```shell
 $ php app/console atoum FooBundle --env=test # launch tests of FooBundle
+$ php app/console atoum FooBundle --debug #launch tests in debug mode
 $ php app/console atoum FooBundle BarBundle --env=test # launch tests of FooBundle and BarBundle
 $ php app/console atoum acme_foo --env=test # launch tests of bundle where alias is acme_foo
 $ php app/console atoum --env=test # launch tests from configuration.

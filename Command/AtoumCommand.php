@@ -48,8 +48,9 @@ Launch tests of all bundles defined on configuration:
 EOF
             )
             ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
-            ->addOption('bootstrap-file', 'bf',InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
-            ;
+            ->addOption('bootstrap-file', 'bf', InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
+            ->addOption('debug', null, InputOption::VALUE_NONE, 'Launch tests in debug mode')
+        ;
     }
 
     /**
@@ -91,6 +92,10 @@ EOF
 
             $this->setAtoumArgument('--test-all');
             $this->setAtoumArgument('--bootstrap-file', $bootstrap);
+
+            if ($input->getOption('debug')) {
+                $this->setAtoumArgument('--debug');
+            }
 
             $runner->run($this->getAtoumArguments());
         }
