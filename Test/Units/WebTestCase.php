@@ -48,6 +48,8 @@ abstract class WebTestCase extends Test
             ->setHandler('POST', $post)
             ->setHandler('put', $put = $this->getSendRequestHandler($client, $crawler, 'PUT'))
             ->setHandler('PUT', $put)
+            ->setHandler('patch', $put = $this->getSendRequestHandler($client, $crawler, 'PATCH'))
+            ->setHandler('PATCH', $put)
             ->setHandler('delete', $delete = $this->getSendRequestHandler($client, $crawler, 'DELETE'))
             ->setHandler('DELETE', $delete)
             ->setHandler('options', $options = $this->getSendRequestHandler($client, $crawler, 'OPTIONS'))
