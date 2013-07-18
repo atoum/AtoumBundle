@@ -49,6 +49,7 @@ EOF
             )
             ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
             ->addOption('bootstrap-file', 'bf',InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
+            ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
             ;
     }
 
@@ -91,6 +92,10 @@ EOF
 
             $this->setAtoumArgument('--test-all');
             $this->setAtoumArgument('--bootstrap-file', $bootstrap);
+
+            if ($input->getOption('no-code-coverage')) {
+                $this->setAtoumArgument('-ncc');
+            }
 
             $runner->run($this->getAtoumArguments());
         }
