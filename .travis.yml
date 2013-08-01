@@ -9,7 +9,7 @@ env:
         - secure: "AwZKGvI1XksV7d1IHzn86m4Hsgk+LOXU6vYTcvBkLbDR40DOBUz7pH1LAX0S\n7KLtKYVHTOwqBQH4QyJHcFDEQ/u/ODmTzPIE8uirMlL8OLbIFMpGVKhjsK6C\nSWX0HS+6w+cN3+MzXK0ie3Pg525PQ+thgq7fJwElNJCqk6SoEkM="
 
 before_script:
-    - mkdir ~/.composer
+    - "[ ! -d ~/.composer ] && mkdir ~/.composer || true"
     - "[ ! -z $GITHUB_TOKEN ] && echo \"{ \\\"config\\\": { \\\"github-oauth\\\": { \\\"github.com\\\": \\\"$GITHUB_TOKEN\\\" } } }\" > ~/.composer/config.json || true"
     - wget http://getcomposer.org/composer.phar
     - "[ ! -z $GITHUB_TOKEN ] && php composer.phar install --dev || php composer.phar install --dev --prefer-source"
