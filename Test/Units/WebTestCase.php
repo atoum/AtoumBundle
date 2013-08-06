@@ -56,7 +56,13 @@ abstract class WebTestCase extends Test
             ->setHandler('OPTIONS', $options)
             ->setHandler(
                 'crawler',
-                function() use (& $crawler, $generator) {
+                function($strict = false) use (& $crawler, $generator) {
+                    if ($strict) {
+                        CssSelector::enableHtmlExtension();
+                    } else {
+                        CssSelector::disableHtmlExtension();
+                    }
+
                     $asserter = new Asserters\Crawler($generator);
 
                     return $asserter->setWith($crawler);
