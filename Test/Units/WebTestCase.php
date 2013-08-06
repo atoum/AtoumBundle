@@ -7,6 +7,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use atoum\AtoumBundle\Test\Asserters;
 use mageekguy\atoum;
+use Symfony\Component\CssSelector\CssSelector;
 
 /**
  * WebTestCase
