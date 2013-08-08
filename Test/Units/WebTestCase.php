@@ -7,6 +7,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use atoum\AtoumBundle\Test\Asserters;
 use mageekguy\atoum;
+use Symfony\Component\CssSelector\CssSelector;
 
 /**
  * WebTestCase
@@ -56,7 +57,13 @@ abstract class WebTestCase extends Test
             ->setHandler('OPTIONS', $options)
             ->setHandler(
                 'crawler',
-                function() use (& $crawler, $generator) {
+                function($strict = false) use (& $crawler, $generator) {
+                    if ($strict) {
+                        CssSelector::enableHtmlExtension();
+                    } else {
+                        CssSelector::disableHtmlExtension();
+                    }
+
                     $asserter = new Asserters\Crawler($generator);
 
                     return $asserter->setWith($crawler);
