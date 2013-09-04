@@ -173,6 +173,53 @@ class BarController extends ControllerTest
 }
 ```
 
+## Test a form type
+
+You can test your form types with the ```FormTestCase``` class as the [official symfony 2 documentation](http://symfony.com/doc/current/cookbook/form/unit_testing.html "How to unit test your forms") shows it.
+But as the official documentation fits the PHPUnit testing framework, here comes this documentation
+first example atoum-translated :
+
+```php
+<?php
+
+namespace Acme\DemoBundle\Tests\Form;
+
+use Acme\DemoBundle\Entity\TestEntity;
+use atoum\AtoumBundle\Test\Form;
+use Acme\DemoBundle\Form\TestEntityType as MyTypeToTest;
+
+class TestEntityType extends Form\FormTestCase{
+
+    public function testToutCourt()
+    {
+        $formData = array(
+            'texte1' => 'test 1',
+            'texte2' => 'test 2',
+        );
+
+        $type = new MyTypeToTest();
+        $form = $this->factory->create($type);
+
+        $object = new TestEntity();
+        $object->fromArray($formData);
+
+        // submit the data to the form directly
+        $form->submit($formData);
+
+        $this->boolean($form->isSynchronized())->isTrue();
+        $this->variable($object)->isEqualTo($form->getData());
+
+        $view = $form->createView();
+        $children = $view->children;
+
+        foreach (array_keys($formData) as $key) {
+            $this->array($formData)->hasKey($key);
+        }
+    }
+
+}
+```
+
 ## Faker data
 
 AtoumBundle integrates with [Faker](https://github.com/fzaninotto/Faker) library.
