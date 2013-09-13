@@ -63,9 +63,9 @@ EOF
         $bundles = $input->getArgument('bundles');
         if (count($bundles) > 0) {
             $self = $this;
-            $bundles = array_map(function($v) use ($self) {
-                return $self->extractBundleConfigurationFromKernel($v);
-            }, $bundles);
+            foreach ($bundles as $k => $bundleName) {
+                $bundles[$k] = $this->extractBundleConfigurationFromKernel($bundleName);
+            }
         } else {
             $bundles = $this->getContainer()->get('atoum.configuration.bundle.container')->all();
         }
@@ -84,21 +84,16 @@ EOF
             }
         }
 
-        if (count($runner->getTestAllDirectories()) == 0) {
-            $output->writeln('<error>There is no test to launch.</error>');
-        } else {
-            $defaultBootstrap =  sprintf('%s/autoload.php', $this->getApplication()->getKernel()->getRootDir());
-            $bootstrap = $input->getOption('bootstrap-file') ?: $defaultBootstrap;
+        $defaultBootstrap =  sprintf('%s/autoload.php', $this->getApplication()->getKernel()->getRootDir());
+        $bootstrap = $input->getOption('bootstrap-file') ?: $defaultBootstrap;
 
-            $this->setAtoumArgument('--test-all');
-            $this->setAtoumArgument('--bootstrap-file', $bootstrap);
+        $this->setAtoumArgument('--bootstrap-file', $bootstrap);
 
-            if ($input->getOption('no-code-coverage')) {
-                $this->setAtoumArgument('-ncc');
-            }
-
-            $runner->run($this->getAtoumArguments());
+        if ($input->getOption('no-code-coverage')) {
+            $this->setAtoumArgument('-ncc');
         }
+
+        $runner->run($this->getAtoumArguments());
     }
 
     /**
