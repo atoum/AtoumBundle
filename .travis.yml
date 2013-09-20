@@ -16,7 +16,7 @@ before_script:
     - "[ ! -z $GITHUB_TOKEN ] && php composer.phar install --dev || php composer.phar install --dev --prefer-source"
 
 script:
-    - bin/atoum --test-all
+    - bin/atoum
 
 notifications:
     irc: "irc.freenode.org##atoum"
