@@ -29,4 +29,4 @@ if(colorized())
 
 $script->noCodeCoverageForNamespaces('mageekguy');
 $script->bootstrapFile(TEST_ROOT . DIRECTORY_SEPARATOR . 'bootstrap.php');
-$script->addTestAllDirectory(TEST_ROOT . DIRECTORY_SEPARATOR . 'units');
+$runner->addTestsFromDirectory(TEST_ROOT . DIRECTORY_SEPARATOR . 'units');
