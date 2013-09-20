@@ -80,7 +80,7 @@ EOF
             }
 
             foreach ($directories as $directory) {
-                $runner->addTestAllDirectory($directory);
+                $runner->getRunner()->addTestsFromDirectory($directory);
             }
         }
 
