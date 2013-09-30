@@ -180,4 +180,14 @@ abstract class WebTestCase extends Test
 
         return $dir;
     }
+
+    /**
+     * return Kernel
+     *
+     * @return Object HttpKernelInterface
+     */
+    public function getKernel()
+    {
+        return $this->kernel;
+    }
 }
