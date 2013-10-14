@@ -8,9 +8,9 @@ use mageekguy\atoum\asserters;
 
 class Crawler extends asserters\object
 {
-    public function setWith($value)
+    public function setWith($value, $checkType = false)
     {
-        parent::setWith($value, false);
+        parent::setWith($value, $checkType);
 
         if (self::isCrawler($this->value) === false) {
             $this->fail(sprintf($this->getLocale()->_('%s is not a crawler'), $this));
