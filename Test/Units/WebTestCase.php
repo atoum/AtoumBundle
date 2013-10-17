@@ -35,8 +35,14 @@ abstract class WebTestCase extends Test
         $this->getAssertionManager()
             ->setHandler(
                 'request',
-                function(array $options = array(), array $server = array()) use (& $client, $test, $generator) {
+                function(array $options = array(), array $server = array(), array $cookies = array()) use (& $client, $test, $generator) {
                     $client = $test->createClient($options, $server);
+
+                    if (count($cookies)) {
+                        foreach ($cookies as $cookie) {
+                            $client->getCookieJar()->set($cookie);
+                        }
+                    }
 
                     return $test;
                 }
