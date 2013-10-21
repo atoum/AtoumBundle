@@ -38,11 +38,9 @@ abstract class WebTestCase extends Test
                 function(array $options = array(), array $server = array(), array $cookies = array()) use (& $client, $test, $generator) {
                     $client = $test->createClient($options, $server);
 
-                    if (count($cookies)) {
-                        foreach ($cookies as $cookie) {
-                            $client->getCookieJar()->set($cookie);
-                        }
-                    }
+                    foreach ($cookies as $cookie) {
+						$client->getCookieJar()->set($cookie);
+					}
 
                     return $test;
                 }
