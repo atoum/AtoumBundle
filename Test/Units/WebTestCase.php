@@ -39,8 +39,8 @@ abstract class WebTestCase extends Test
                     $client = $test->createClient($options, $server);
 
                     foreach ($cookies as $cookie) {
-						$client->getCookieJar()->set($cookie);
-					}
+                        $client->getCookieJar()->set($cookie);
+                    }
 
                     return $test;
                 }
