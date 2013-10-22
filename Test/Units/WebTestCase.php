@@ -36,11 +36,7 @@ abstract class WebTestCase extends Test
             ->setHandler(
                 'request',
                 function(array $options = array(), array $server = array(), array $cookies = array()) use (& $client, $test, $generator) {
-                    $client = $test->createClient($options, $server);
-
-                    foreach ($cookies as $cookie) {
-                        $client->getCookieJar()->set($cookie);
-                    }
+                    $client = $test->createClient($options, $server, $cookies);
 
                     return $test;
                 }
@@ -102,10 +98,11 @@ abstract class WebTestCase extends Test
      *
      * @param array $options An array of options to pass to the createKernel class
      * @param array $server  An array of server parameters
+     * @param array $cookies An array of Symfony\Component\BrowserKit\Cookie
      *
      * @return Client A Client instance
      */
-    public function createClient(array $options = array(), array $server = array())
+    public function createClient(array $options = array(), array $server = array(), array $cookies = array())
     {
         if (null !== $this->kernel) {
             $this->kernel->shutdown();
@@ -116,6 +113,10 @@ abstract class WebTestCase extends Test
 
         $client = $this->kernel->getContainer()->get('test.client');
         $client->setServerParameters($server);
+        
+        foreach ($cookies as $cookie) {
+          $client->getCookieJar()->set($cookie);
+        }
 
         return $client;
     }
