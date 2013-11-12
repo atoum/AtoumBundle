@@ -1,8 +1,6 @@
 <?php
 namespace atoum\AtoumBundle\tests\units\Test\Units;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 use mageekguy\atoum;
 
 class Test extends atoum\test
