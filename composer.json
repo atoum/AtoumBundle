@@ -24,6 +24,9 @@
         "atoum/atoum": "dev-master",
         "fzaninotto/faker": "1.*"
     },
+    "require-dev": {
+        "symfony/console": "2.*"
+    },
     "replace": {
         "rezzza/atoum-bundle": "*",
         "jedi/atoum-bundle": "*"
