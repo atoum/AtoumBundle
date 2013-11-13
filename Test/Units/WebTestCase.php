@@ -2,6 +2,7 @@
 
 namespace atoum\AtoumBundle\Test\Units;
 
+use atoum\AtoumBundle\Scripts\Runner;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -17,10 +18,13 @@ use Symfony\Component\CssSelector\CssSelector;
  */
 abstract class WebTestCase extends Test
 {
+    /** @var bool */
+    protected $environment;
+
     /** @var $string */
     protected $class;
 
-    /** @var \Symfony\Component\HttpFoundation\HttpKernelInterface */
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface */
     protected $kernel;
 
     public function __construct(atoum\adapter $adapter = null, atoum\annotations\extractor $annotationExtractor = null, atoum\asserter\generator $asserterGenerator = null, atoum\test\assertion\manager $assertionManager = null, \closure $reflectionClassFactory = null)
@@ -140,7 +144,7 @@ abstract class WebTestCase extends Test
         }
 
         return new $this->class(
-            isset($options['environment']) ? $options['environment'] : 'test',
+            isset($options['environment']) ? $options['environment'] : $this->getKernelEnvironment(),
             isset($options['debug']) ? $options['debug'] : true
         );
     }
@@ -194,5 +198,17 @@ abstract class WebTestCase extends Test
     public function getKernel()
     {
         return $this->kernel;
+    }
+
+    public function getKernelEnvironment()
+    {
+        return $this->environment ?: Runner::DEFAULT_ENVIRONMENT;
+    }
+
+    public function setKernelEnvironment($environment = null)
+    {
+        $this->environment = $environment;
+
+        return $this;
     }
 }

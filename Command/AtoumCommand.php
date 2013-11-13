@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 use atoum\AtoumBundle\Configuration\Bundle as BundleConfiguration;
-use mageekguy\atoum\scripts\runner;
+use atoum\AtoumBundle\Scripts\Runner;
 
 /**
  * AtoumCommand
@@ -19,11 +19,6 @@ use mageekguy\atoum\scripts\runner;
  */
 class AtoumCommand extends ContainerAwareCommand
 {
-    /**
-     * @var array List of atoum CLI runner arguments
-     */
-    private $atoumArguments = array();
-
     /**
      * {@inheritdoc}
      */
@@ -48,9 +43,10 @@ Launch tests of all bundles defined on configuration:
 EOF
             )
             ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
-            ->addOption('bootstrap-file', 'bf',InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
-            ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
-            ;
+            ->addOption('bootstrap-file', 'b',InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
+            ->addOption('no-code-coverage', 'c', InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
+            ->addOption('kernel-env', null, InputOption::VALUE_REQUIRED, 'Changes the kernel environment', Runner::DEFAULT_ENVIRONMENT)
+        ;
     }
 
     /**
@@ -58,11 +54,10 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $runner = new runner('atoum');
+        $runner = $this->getContainer()->get('atoum.runner');
 
         $bundles = $input->getArgument('bundles');
         if (count($bundles) > 0) {
-            $self = $this;
             foreach ($bundles as $k => $bundleName) {
                 $bundles[$k] = $this->extractBundleConfigurationFromKernel($bundleName);
             }
@@ -80,54 +75,28 @@ EOF
             }
 
             foreach ($directories as $directory) {
-                $runner->getRunner()->addTestsFromDirectory($directory);
+                $runner->addTestsFromDirectory($directory);
             }
         }
 
         $defaultBootstrap =  sprintf('%s/autoload.php', $this->getApplication()->getKernel()->getRootDir());
         $bootstrap = $input->getOption('bootstrap-file') ?: $defaultBootstrap;
 
-        $this->setAtoumArgument('--bootstrap-file', $bootstrap);
+        $runner->setBootstrapFile($bootstrap);
 
         if ($input->getOption('no-code-coverage')) {
-            $this->setAtoumArgument('-ncc');
+            $runner->disableCodeCoverage();
         }
 
-        $runner->run($this->getAtoumArguments());
-    }
+        $runner->setEnvironment($input->getOption('kernel-env'));
 
-    /**
-     * Set an atoum CLI argument
-     *
-     * @param string $name
-     * @param string $values
-     */
-    protected function setAtoumArgument($name, $values = null)
-    {
-        $this->atoumArguments[$name] = $values;
-    }
-
-    /**
-     * Return inlined atoum cli arguments
-     *
-     * @return array
-     */
-    protected function getAtoumArguments()
-    {
-        $inlinedArguments = array();
-
-        foreach ($this->atoumArguments as $name => $values) {
-            $inlinedArguments[] = $name;
-            if (null !== $values) {
-                $inlinedArguments[] = $values;
-            }
-        }
-
-        return $inlinedArguments;
+        $runner->run();
     }
 
     /**
      * @param string $name name
+     *
+     * @throws \LogicException
      *
      * @return BundleConfiguration
      */

@@ -7,10 +7,16 @@
     <parameters>
         <parameter key="atoum.configuration.bundle.container.class">atoum\AtoumBundle\Configuration\BundleContainer</parameter>
         <parameter key="atoum.configuration.bundle.class">atoum\AtoumBundle\Configuration\Bundle</parameter>
+        <parameter key="atoum.runner.class">atoum\AtoumBundle\Scripts\Runner</parameter>
+        <parameter key="atoum.runner.name">atoum</parameter>
     </parameters>
 
     <services>
         <service id="atoum.configuration.bundle.container" class="%atoum.configuration.bundle.container.class%">
+        </service>
+
+        <service id="atoum.runner" class="%atoum.runner.class%">
+            <argument>%atoum.configuration.bundle.container.class%</argument>
         </service>
     </services>
 </container>
