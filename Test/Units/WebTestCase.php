@@ -144,7 +144,7 @@ abstract class WebTestCase extends Test
         }
 
         return new $this->class(
-            isset($options['environment']) ? $options['environment'] : 'test',
+            isset($options['environment']) ? $options['environment'] : $this->getKernelEnvironment(),
             isset($options['debug']) ? $options['debug'] : true
         );
     }
