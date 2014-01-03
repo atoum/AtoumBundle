@@ -76,6 +76,18 @@ abstract class WebTestCase extends Test
 
     }
 
+    protected function setClassAnnotations(atoum\annotations\extractor $extractor)
+    {
+        parent::setClassAnnotations($extractor);
+
+        $test = $this;
+
+        $extractor
+            ->setHandler('resetKernel', function($value) use ($test) { $test->enableKernelReset(atoum\annotations\extractor::toBoolean($value)); })
+            ->setHandler('noResetKernel', function() use ($test) { $test->enableKernelReset(false); })
+        ;
+    }
+
     /**
      * @param \Symfony\Bundle\FrameworkBundle\Client $client
      * @param \Symfony\Component\DomCrawler\Crawler  $crawler
