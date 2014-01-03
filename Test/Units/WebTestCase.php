@@ -23,6 +23,9 @@ abstract class WebTestCase extends Test
     /** @var \Symfony\Component\HttpFoundation\HttpKernelInterface */
     protected $kernel;
 
+    /** @var boolean */
+    protected $kernelReset = true;
+
     public function __construct(atoum\adapter $adapter = null, atoum\annotations\extractor $annotationExtractor = null, atoum\asserter\generator $asserterGenerator = null, atoum\test\assertion\manager $assertionManager = null, \closure $reflectionClassFactory = null)
     {
         parent::__construct($adapter, $annotationExtractor, $asserterGenerator, $assertionManager, $reflectionClassFactory);
@@ -73,6 +76,18 @@ abstract class WebTestCase extends Test
 
     }
 
+    protected function setClassAnnotations(atoum\annotations\extractor $extractor)
+    {
+        parent::setClassAnnotations($extractor);
+
+        $test = $this;
+
+        $extractor
+            ->setHandler('resetKernel', function($value) use ($test) { $test->enableKernelReset(atoum\annotations\extractor::toBoolean($value)); })
+            ->setHandler('noResetKernel', function() use ($test) { $test->enableKernelReset(false); })
+        ;
+    }
+
     /**
      * @param \Symfony\Bundle\FrameworkBundle\Client $client
      * @param \Symfony\Component\DomCrawler\Crawler  $crawler
@@ -104,18 +119,22 @@ abstract class WebTestCase extends Test
      */
     public function createClient(array $options = array(), array $server = array(), array $cookies = array())
     {
-        if (null !== $this->kernel) {
+        
+        if (null !== $this->kernel && $this->kernelReset) {
             $this->kernel->shutdown();
+            $this->kernel->boot();
         }
 
-        $this->kernel = $this->createKernel($options);
-        $this->kernel->boot();
+        if(null === $this->kernel) {
+            $this->kernel = $this->createKernel($options);
+            $this->kernel->boot();
+        }
 
         $client = $this->kernel->getContainer()->get('test.client');
         $client->setServerParameters($server);
         
         foreach ($cookies as $cookie) {
-          $client->getCookieJar()->set($cookie);
+            $client->getCookieJar()->set($cookie);
         }
 
         return $client;
@@ -194,5 +213,19 @@ abstract class WebTestCase extends Test
     public function getKernel()
     {
         return $this->kernel;
+    }
+
+    /**
+     * Enable or disable kernel reseting on client creation.
+     * 
+     * @param boolean $kernelReset
+     *
+     * @return WebTestCase
+     */
+    public function enableKernelReset($kernelReset)
+    {
+        $this->kernelReset = (boolean) $kernelReset;
+
+        return $this;
     }
 }
