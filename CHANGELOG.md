@@ -6,6 +6,8 @@
   * Compatibility break
       * static $kernel variable become a class variable
       * AtoumBundle\Test\Units\Test::getRandomString() and AtoumBundle\Test\Generator\String were removed
+  * Add two annotations to enable/disable kernel reset in tests : @resetKernel and @noResetKernel
+  * Compatibility improvement with symfony/dom-crawler 2.3 and 2.4
 
 * 1.0.0 (2012)
 
