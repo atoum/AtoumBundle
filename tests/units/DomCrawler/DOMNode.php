@@ -54,7 +54,7 @@ class DOMNode extends atoum\test
             ->if($crawler = new \Symfony\Component\DomCrawler\Crawler(array($node)))
             ->and($object = new TestedClass($crawler))
             ->then
-                ->string($object->attr(uniqid()))->isEmpty()
+                ->variable($object->attr(uniqid()))->isNull()
             ->if($a = $node->setAttribute($attr = uniqid('_'), $value = uniqid()))
             ->and($object = new TestedClass($node))
             ->then

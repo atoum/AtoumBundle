@@ -31,8 +31,22 @@ class DOMNode
     public function attr($attribute)
     {
         $node = $this->getNode();
+        $value = null;
 
-        return $node instanceof \DOMNode ? $node->getAttribute($attribute) : $node->attr($attribute);
+        if ($node instanceof \DOMNode) {
+            $value = $node->getAttribute($attribute);
+        } else {
+            foreach ($node as $item) {
+                if ($item->hasAttribute($attribute))
+                {
+                    $value = $node->attr($attribute);
+                }
+
+                break;
+            }
+        }
+
+        return $value;
     }
 
     public function children()
