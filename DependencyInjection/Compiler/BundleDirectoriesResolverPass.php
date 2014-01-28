@@ -14,6 +14,11 @@ use Symfony\Component\DependencyInjection\Definition;
  */
 class BundleDirectoriesResolverPass implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     *
+     * @throws \LogicException
+     */
     public function process(ContainerBuilder $container)
     {
         $bundles         = $container->getParameter('kernel.bundles');
@@ -28,9 +33,12 @@ class BundleDirectoriesResolverPass implements CompilerPassInterface
             $rc        = new \ReflectionClass($bundles[$bundleName]);
             $directory = dirname($rc->getFileName());
 
-            $directories = array_map(function($v) use ($directory) {
-                return $directory.'/'.$v;
-            }, $data['directories']);
+            $directories = array_map(
+                function ($v) use ($directory) {
+                    return $directory.'/'.$v;
+                },
+                $data['directories']
+            );
 
             $definition = new Definition(
                 $container->getParameter('atoum.configuration.bundle.class'),

@@ -20,7 +20,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $tb       = new TreeBuilder();
+        $tb = new TreeBuilder();
 
         return $tb
             ->root('atoum_atoum')
@@ -41,8 +41,6 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end()
-            ;
-
-        return $tb;
+        ;
     }
 }

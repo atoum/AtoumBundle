@@ -3,7 +3,7 @@
 namespace atoum\AtoumBundle\Test\Form;
 
 use atoum\AtoumBundle\Test\Units\Test;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use mageekguy\atoum;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Forms;
 
@@ -25,6 +25,9 @@ abstract class FormTestCase extends Test
      */
     protected $factory;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(atoum\adapter $adapter = null, atoum\annotations\extractor $annotationExtractor = null, atoum\asserter\generator $asserterGenerator = null, atoum\test\assertion\manager $assertionManager = null, \closure $reflectionClassFactory = null)
     {
         parent::__construct($adapter, $annotationExtractor, $asserterGenerator, $assertionManager, $reflectionClassFactory);
@@ -44,9 +47,11 @@ abstract class FormTestCase extends Test
         $this->builder = new FormBuilder(null, null, $this->dispatcher, $this->factory);
     }
 
+    /**
+     * @return array
+     */
     public function getExtensions()
     {
         return array();
     }
-
 }

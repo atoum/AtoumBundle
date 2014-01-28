@@ -10,15 +10,34 @@ use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class Element extends asserters\object
 {
+    /** @var \atoum\AtoumBundle\Test\Asserters\Crawler  */
     private $parent;
+
+    /** @var string */
     private $selector;
+
+    /** @var string */
     private $content;
+
+    /** @var string[] */
     private $attributes = array();
+
+    /** @var int */
     private $exactly;
+
+    /** @var int */
     private $atLeast;
+
+    /** @var int */
     private $atMost;
+
+    /** @var int */
     private $childCount;
 
+    /**
+     * @param asserter\generator $generator
+     * @param Crawler|Element    $parent
+     */
     public function __construct(asserter\generator $generator, $parent)
     {
         parent::__construct($generator);
@@ -27,11 +46,20 @@ class Element extends asserters\object
         $this->atLeast = 1;
     }
 
+    /**
+     * @return Crawler
+     */
     public function getParent()
     {
         return $this->parent;
     }
 
+    /**
+     * @param mixed       $value
+     * @param string|null $selector
+     *
+     * @return $this
+     */
     public function setWith($value, $selector = null)
     {
         parent::setWith($value, false);
@@ -47,6 +75,11 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @param string|null $failMessage
+     *
+     * @return Crawler
+     */
     public function end($failMessage = null)
     {
         $nodes = $this->valueIsSet()->value;
@@ -55,7 +88,7 @@ class Element extends asserters\object
             $content = $this->getContent();
             $nodes = $this->reduce(
                 $nodes,
-                function(DOMNode $node) use ($content) {
+                function (DOMNode $node) use ($content) {
                     return ($node->text() == $content);
                 }
             );
@@ -74,6 +107,11 @@ class Element extends asserters\object
         return $this->parent;
     }
 
+    /**
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function isEmpty($failMessage = null)
     {
         return $this
@@ -82,11 +120,19 @@ class Element extends asserters\object
         ;
     }
 
+    /**
+     * @return $this
+     */
     public function hasNoContent()
     {
         return $this->withContent('');
     }
 
+    /**
+     * @param string $content
+     *
+     * @return $this
+     */
     public function withContent($content)
     {
         $this->content = $content;
@@ -94,16 +140,22 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * @return $this
+     */
     public function hasContent()
     {
         $nodes = $this->reduce(
             $this->valueIsSet()->value,
-            function(DOMNode $node) {
+            function (DOMNode $node) {
                 return ($node->text() != '');
             }
         );
@@ -113,16 +165,27 @@ class Element extends asserters\object
         return $this;
     }
 
-
+    /**
+     * @param DomCrawler $nodes
+     * @param callable   $closure
+     *
+     * @return DomCrawler
+     */
     protected function reduce(DomCrawler $nodes, \Closure $closure)
     {
         return $nodes->reduce(
-            function($node) use ($closure) {
+            function ($node) use ($closure) {
                 return $closure(new DOMNode($node));
             }
         );
     }
 
+    /**
+     * @param string $name
+     * @param string $value
+     *
+     * @return $this
+     */
     public function withAttribute($name, $value)
     {
         $this->attributes[$name] = $value;
@@ -130,18 +193,26 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
+    /**
+     * @param DomCrawler $nodes
+     *
+     * @return DomCrawler
+     */
     protected function filterAttributes(DomCrawler $nodes)
     {
         $attributes = $this->attributes;
 
         return $this->reduce(
             $nodes,
-            function(DOMNode $node) use ($attributes) {
+            function (DOMNode $node) use ($attributes) {
                 foreach ($attributes as $name => $value) {
                     if ($value !== $node->attr($name)) {
                         return false;
@@ -153,16 +224,26 @@ class Element extends asserters\object
         );
     }
 
-    public function hasChild($element)
+    /**
+     * @param string $selector
+     *
+     * @return Element
+     */
+    public function hasChild($selector)
     {
         $this->assertAtLeast($this->valueIsSet()->value);
 
-        $asserter = new Element($this->getGenerator(), $this);
-        $asserter->setWith($this->valueIsSet()->value->filter($element), $element);
+        $asserter = new self($this->getGenerator(), $this);
+        $asserter->setWith($this->valueIsSet()->value->filter($selector), $selector);
 
         return $asserter;
     }
 
+    /**
+     * @param int $count
+     *
+     * @return $this
+     */
     public function hasChildExactly($count)
     {
         $this->childCount = $count;
@@ -170,23 +251,34 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function hasNoChild()
     {
         return $this->hasChildExactly(0);
     }
 
+    /**
+     * @return int|null
+     */
     public function getChildCount()
     {
         return $this->childCount;
     }
 
+    /**
+     * @param DomCrawler $nodes
+     *
+     * @return DomCrawler
+     */
     protected function filterChild(DomCrawler $nodes)
     {
         $count = $this->childCount;
 
         return $this->reduce(
             $nodes,
-            function(DOMNode $node) use ($count) {
+            function (DOMNode $node) use ($count) {
                 $nodes = 0;
 
                 foreach ($node->children() as $child) {
@@ -200,6 +292,12 @@ class Element extends asserters\object
         );
     }
 
+    /**
+     * @param DomCrawler  $value
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     protected function assertCount(DomCrawler $value, $failMessage = null)
     {
         if ($this->exactly !== null) {
@@ -217,6 +315,11 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @param int $count
+     *
+     * @return $this
+     */
     public function exactly($count)
     {
         $this->atLeast = null;
@@ -226,11 +329,20 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getExactly()
     {
         return $this->exactly;
     }
 
+    /**
+     * @param DomCrawler  $value
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     protected function assertExactly(DomCrawler $value, $failMessage = null)
     {
         if (count($value) !== $this->exactly) {
@@ -249,6 +361,11 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @param int $count
+     *
+     * @return $this
+     */
     public function atLeast($count)
     {
         $this->exactly = null;
@@ -257,11 +374,20 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getAtLeast()
     {
         return $this->atLeast;
     }
 
+    /**
+     * @param DomCrawler  $value
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     protected function assertAtLeast(DomCrawler $value, $failMessage = null)
     {
         if (count($value) >= $this->atLeast) {
@@ -280,6 +406,11 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @param int $count
+     *
+     * @return $this
+     */
     public function atMost($count)
     {
         $this->exactly = null;
@@ -288,11 +419,20 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @return int
+     */
     public function getAtMost()
     {
         return $this->atMost;
     }
 
+    /**
+     * @param DomCrawler  $value
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     protected function assertAtMost(DomCrawler $value, $failMessage = null)
     {
         if (count($value) <= $this->atMost) {
@@ -311,6 +451,9 @@ class Element extends asserters\object
         return $this;
     }
 
+    /**
+     * @return string
+     */
     protected function getPattern()
     {
         $attributes = '';
@@ -326,6 +469,11 @@ class Element extends asserters\object
         );
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
     protected static function isCrawler($value)
     {
         return ($value instanceof DomCrawler);

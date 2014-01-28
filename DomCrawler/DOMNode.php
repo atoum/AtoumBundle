@@ -5,8 +5,16 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class DOMNode
 {
+    /**
+     * @var \DOMNode|\Symfony\Component\DomCrawler\Crawler
+     */
     protected $node;
 
+    /**
+     * @param \DOMNode|\Symfony\Component\DomCrawler\Crawler $node
+     *
+     * @throws \InvalidArgumentException
+     */
     public function __construct($node)
     {
         if (($node instanceof Crawler || $node instanceof \DOMNode) === false) {
@@ -16,11 +24,17 @@ class DOMNode
         $this->node = $node;
     }
 
+    /**
+     * @return \DOMNode|\Symfony\Component\DomCrawler\Crawler
+     */
     public function getNode()
     {
         return $this->node;
     }
 
+    /**
+     * @return string
+     */
     public function text()
     {
         $node = $this->getNode();
@@ -28,6 +42,11 @@ class DOMNode
         return $node instanceof \DOMNode ? $node->nodeValue : $node->text();
     }
 
+    /**
+     * @param string $attribute
+     *
+     * @return null|string
+     */
     public function attr($attribute)
     {
         $node = $this->getNode();
@@ -37,8 +56,7 @@ class DOMNode
             $value = $node->getAttribute($attribute);
         } else {
             foreach ($node as $item) {
-                if ($item->hasAttribute($attribute))
-                {
+                if ($item->hasAttribute($attribute)) {
                     $value = $node->attr($attribute);
                 }
 
@@ -49,6 +67,9 @@ class DOMNode
         return $value;
     }
 
+    /**
+     * @return \Symfony\Component\DomCrawler\Crawler
+     */
     public function children()
     {
         $node = $this->getNode();

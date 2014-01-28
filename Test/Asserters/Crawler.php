@@ -8,6 +8,12 @@ use mageekguy\atoum\asserters;
 
 class Crawler extends asserters\object
 {
+    /**
+     * @param mixed $value
+     * @param bool  $checkType
+     *
+     * @return $this
+     */
     public function setWith($value, $checkType = false)
     {
         parent::setWith($value, $checkType);
@@ -21,6 +27,11 @@ class Crawler extends asserters\object
         return $this;
     }
 
+    /**
+     * @param string $element
+     *
+     * @return $this
+     */
     public function hasElement($element)
     {
         $asserter = new Element($this->generator, $this);
@@ -28,6 +39,11 @@ class Crawler extends asserters\object
         return $asserter->setWith($this->valueIsSet()->value->filter($element), $element);
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
     protected static function isCrawler($value)
     {
         return ($value instanceof \Symfony\Component\DomCrawler\Crawler);

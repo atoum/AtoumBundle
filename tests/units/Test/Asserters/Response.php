@@ -30,7 +30,7 @@ class Response extends atoum\test
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($value = uniqid())
             ->then
-                ->exception(function() use ($object, $value) {
+                ->exception(function () use ($object, $value) {
                     $object->setWith($value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -46,11 +46,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getStatusCode = function() use(& $status) { return $status; })
+            ->and($this->calling($response)->getStatusCode = function () use (& $status) { return $status; })
             ->and($object->setWith($response))
             ->and($status = rand(400, 500))
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasStatus($value = rand(200, 300));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -66,11 +66,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getAge = function() use(& $age) { return $age; })
+            ->and($this->calling($response)->getAge = function () use (& $age) { return $age; })
             ->and($object->setWith($response))
             ->and($age = rand(0, 100))
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasAge($value = rand(200, PHP_INT_MAX));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -86,11 +86,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getMaxAge = function() use(& $age) { return $age; })
+            ->and($this->calling($response)->getMaxAge = function () use (& $age) { return $age; })
             ->and($object->setWith($response))
             ->and($age = rand(0, 100))
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasMaxAge($value = rand(200, PHP_INT_MAX));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -106,11 +106,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getCharset = function() use(& $charset) { return $charset; })
+            ->and($this->calling($response)->getCharset = function () use (& $charset) { return $charset; })
             ->and($object->setWith($response))
             ->and($charset = uniqid())
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasCharset($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -126,11 +126,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getContent = function() use(& $content) { return $content; })
+            ->and($this->calling($response)->getContent = function () use (& $content) { return $content; })
             ->and($object->setWith($response))
             ->and($content = uniqid())
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasContent($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -146,11 +146,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getEtag = function() use(& $etag) { return $etag; })
+            ->and($this->calling($response)->getEtag = function () use (& $etag) { return $etag; })
             ->and($object->setWith($response))
             ->and($etag = uniqid())
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasEtag($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -166,11 +166,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getProtocolVersion = function() use(& $version) { return $version; })
+            ->and($this->calling($response)->getProtocolVersion = function () use (& $version) { return $version; })
             ->and($object->setWith($response))
             ->and($version = uniqid())
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasVersion($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -186,11 +186,11 @@ class Response extends atoum\test
         $this
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($response = new \mock\Symfony\Component\HttpFoundation\Response())
-            ->and($this->calling($response)->getTtl = function() use(& $ttl) { return $ttl; })
+            ->and($this->calling($response)->getTtl = function () use (& $ttl) { return $ttl; })
             ->and($object->setWith($response))
             ->and($ttl = rand(0, 100))
             ->then
-                ->exception(function() use($object, & $value) {
+                ->exception(function () use ($object, & $value) {
                     $object->hasTtl($value = rand(200, PHP_INT_MAX));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
@@ -212,14 +212,14 @@ class Response extends atoum\test
             ->and($header = uniqid())
             ->and($value = uniqid())
             ->then
-                ->exception(function() use($object, $header, $value) {
+                ->exception(function () use ($object, $header, $value) {
                     $object->hasHeader($header, $value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Value null is not equal to %s for header %s'), $object->getTypeOf($value), $header))
             ->if($this->calling($headers)->get = $actual = uniqid())
             ->then
-                ->exception(function() use($object, $header, $value) {
+                ->exception(function () use ($object, $header, $value) {
                     $object->hasHeader($header, $value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')

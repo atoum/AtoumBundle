@@ -20,12 +20,15 @@ abstract class WebTestCase extends Test
     /** @var $string */
     protected $class;
 
-    /** @var \Symfony\Component\HttpFoundation\HttpKernelInterface */
+    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface */
     protected $kernel;
 
     /** @var boolean */
     protected $kernelReset = true;
 
+    /**
+     * {@inheritdoc}
+     */
     public function __construct(atoum\adapter $adapter = null, atoum\annotations\extractor $annotationExtractor = null, atoum\asserter\generator $asserterGenerator = null, atoum\test\assertion\manager $assertionManager = null, \closure $reflectionClassFactory = null)
     {
         parent::__construct($adapter, $annotationExtractor, $asserterGenerator, $assertionManager, $reflectionClassFactory);
@@ -60,7 +63,7 @@ abstract class WebTestCase extends Test
             ->setHandler('OPTIONS', $options)
             ->setHandler(
                 'crawler',
-                function($strict = false) use (& $crawler, $generator) {
+                function ($strict = false) use (& $crawler, $generator) {
                     if ($strict) {
                         CssSelector::enableHtmlExtension();
                     } else {
@@ -76,6 +79,11 @@ abstract class WebTestCase extends Test
 
     }
 
+    /**
+     * @param atoum\annotations\extractor $extractor
+     *
+     * @return $this|void
+     */
     protected function setClassAnnotations(atoum\annotations\extractor $extractor)
     {
         parent::setClassAnnotations($extractor);
@@ -83,8 +91,8 @@ abstract class WebTestCase extends Test
         $test = $this;
 
         $extractor
-            ->setHandler('resetKernel', function($value) use ($test) { $test->enableKernelReset(atoum\annotations\extractor::toBoolean($value)); })
-            ->setHandler('noResetKernel', function() use ($test) { $test->enableKernelReset(false); })
+            ->setHandler('resetKernel', function ($value) use ($test) { $test->enableKernelReset(atoum\annotations\extractor::toBoolean($value)); })
+            ->setHandler('noResetKernel', function () use ($test) { $test->enableKernelReset(false); })
         ;
     }
 
@@ -119,20 +127,19 @@ abstract class WebTestCase extends Test
      */
     public function createClient(array $options = array(), array $server = array(), array $cookies = array())
     {
-        
         if (null !== $this->kernel && $this->kernelReset) {
             $this->kernel->shutdown();
             $this->kernel->boot();
         }
 
-        if(null === $this->kernel) {
+        if (null === $this->kernel) {
             $this->kernel = $this->createKernel($options);
             $this->kernel->boot();
         }
 
         $client = $this->kernel->getContainer()->get('test.client');
         $client->setServerParameters($server);
-        
+
         foreach ($cookies as $cookie) {
             $client->getCookieJar()->set($cookie);
         }
@@ -168,6 +175,8 @@ abstract class WebTestCase extends Test
      * Attempts to guess the kernel location.
      *
      * When the Kernel is located, the file is required.
+     *
+     * @throws \RuntimeException
      *
      * @return string The Kernel class name
      */
@@ -217,7 +226,7 @@ abstract class WebTestCase extends Test
 
     /**
      * Enable or disable kernel reseting on client creation.
-     * 
+     *
      * @param boolean $kernelReset
      *
      * @return WebTestCase

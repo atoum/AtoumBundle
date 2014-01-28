@@ -62,7 +62,6 @@ EOF
 
         $bundles = $input->getArgument('bundles');
         if (count($bundles) > 0) {
-            $self = $this;
             foreach ($bundles as $k => $bundleName) {
                 $bundles[$k] = $this->extractBundleConfigurationFromKernel($bundleName);
             }
@@ -71,7 +70,7 @@ EOF
         }
 
         foreach ($bundles as $bundle) {
-            $directories = array_filter($bundle->getDirectories(), function($dir) {
+            $directories = array_filter($bundle->getDirectories(), function ($dir) {
                 return is_dir($dir);
             });
 
@@ -128,6 +127,8 @@ EOF
 
     /**
      * @param string $name name
+     *
+     * @throws \LogicException
      *
      * @return BundleConfiguration
      */
