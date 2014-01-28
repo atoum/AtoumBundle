@@ -19,6 +19,7 @@ use mageekguy\atoum\scripts\runner;
  */
 class AtoumCommand extends ContainerAwareCommand
 {
+
     /**
      * @var array List of atoum CLI runner arguments
      */
@@ -30,9 +31,9 @@ class AtoumCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('atoum')
-            ->setDescription('Launch atoum tests.')
-            ->setHelp(<<<EOF
+                ->setName('atoum')
+                ->setDescription('Launch atoum tests.')
+                ->setHelp(<<<EOF
 Launch tests of AcmeFooBundle:
 
 <comment>./app/console atoum AcmeFooBundle</comment>
@@ -46,11 +47,12 @@ Launch tests of all bundles defined on configuration:
 <comment>./app/console atoum</comment>
 
 EOF
-            )
-            ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
-            ->addOption('bootstrap-file', 'bf',InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
-            ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
-            ;
+                )
+                ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
+                ->addOption('bootstrap-file', 'bf', InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
+                ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
+                ->addOption('max-children-number', 'mcn', InputOption::VALUE_REQUIRED, 'Maximum number of sub-processus which will be run simultaneously')
+        ;
     }
 
     /**
@@ -84,13 +86,17 @@ EOF
             }
         }
 
-        $defaultBootstrap =  sprintf('%s/autoload.php', $this->getApplication()->getKernel()->getRootDir());
-        $bootstrap = $input->getOption('bootstrap-file') ?: $defaultBootstrap;
+        $defaultBootstrap = sprintf('%s/autoload.php', $this->getApplication()->getKernel()->getRootDir());
+        $bootstrap = $input->getOption('bootstrap-file') ? : $defaultBootstrap;
 
         $this->setAtoumArgument('--bootstrap-file', $bootstrap);
 
         if ($input->getOption('no-code-coverage')) {
             $this->setAtoumArgument('-ncc');
+        }
+
+        if ($input->getOption('max-children-number')) {
+            $this->setAtoumArgument('--max-children-number', (int) $input->getOption('max-children-number'));
         }
 
         $runner->run($this->getAtoumArguments());
@@ -134,7 +140,7 @@ EOF
     public function extractBundleConfigurationFromKernel($name)
     {
         $kernelBundles = $this->getContainer()->get('kernel')->getBundles();
-        $bundle        = null;
+        $bundle = null;
 
         if (preg_match('/Bundle$/', $name)) {
             if (!isset($kernelBundles[$name])) {
@@ -178,4 +184,5 @@ EOF
             sprintf('%s/Tests/Controller', $bundle->getPath()),
         );
     }
+
 }
