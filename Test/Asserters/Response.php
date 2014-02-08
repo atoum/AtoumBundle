@@ -7,6 +7,12 @@ use mageekguy\atoum\asserters;
 
 class Response extends asserters\object
 {
+    /**
+     * @param mixed $value
+     * @param bool  $checkType
+     *
+     * @return $this
+     */
     public function setWith($value, $checkType = true)
     {
         parent::setWith($value, false);
@@ -22,6 +28,12 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param int         $status
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasStatus($status, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getStatusCode()) !== $status) {
@@ -33,6 +45,12 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param int         $age
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasAge($age, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getAge()) !== $age) {
@@ -44,9 +62,14 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param int         $age
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasMaxAge($age, $failMessage = null)
     {
-
         if (($actual = $this->valueIsSet()->value->getMaxAge()) !== $age) {
             $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Max age %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($age)));
         } else {
@@ -56,6 +79,12 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param string      $charset
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasCharset($charset, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getCharset()) !== $charset) {
@@ -67,6 +96,12 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param string      $content
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasContent($content, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getContent()) !== $content) {
@@ -78,6 +113,12 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param string      $etag
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasEtag($etag, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getEtag()) !== $etag) {
@@ -89,6 +130,12 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param string      $version
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasVersion($version, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getProtocolVersion()) !== $version) {
@@ -100,6 +147,12 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param int         $ttl
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasTtl($ttl, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getTtl()) !== $ttl) {
@@ -111,6 +164,13 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @param string      $name
+     * @param string      $value
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function hasHeader($name, $value, $failMessage = null)
     {
         if (($actual = $this->getHeaders()->get($name)) !== $value) {
@@ -122,22 +182,40 @@ class Response extends asserters\object
         return $this;
     }
 
+    /**
+     * @return \Symfony\Component\HttpFoundation\ResponseHeaderBag
+     */
     public function getHeaders()
     {
         return $this->valueIsSet()->value->headers;
     }
 
+    /**
+     * @param mixed $value
+     *
+     * @return bool
+     */
     protected static function isResponse($value)
     {
         return ($value instanceof \Symfony\Component\HttpFoundation\Response);
     }
 
+    /**
+     * @return $this
+     */
     public function dumpResponse()
     {
         $this->dump($this->getValue()->getContent());
+
         return $this;
     }
 
+    /**
+     * @param string      $text
+     * @param string|null $failMessage
+     *
+     * @return $this
+     */
     public function contains($text, $failMessage = null)
     {
         if (false !== strpos($this->getValue()->getContent(), $text)) {
@@ -145,6 +223,7 @@ class Response extends asserters\object
         } else {
             $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_("text : '%s' wasn't found in the response"), $text));
         }
+
         return $this;
     }
 }

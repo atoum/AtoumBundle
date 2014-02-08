@@ -13,7 +13,7 @@ class DOMNode extends atoum\test
         $this
             ->if($node = new \StdClass)
             ->then
-                ->exception(function() use ($node) {
+                ->exception(function () use ($node) {
                     new TestedClass($node);
                 })
                     ->isInstanceOf('\\InvalidArgumentException')

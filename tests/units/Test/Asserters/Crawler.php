@@ -30,7 +30,7 @@ class Crawler extends atoum\test
             ->if($object = new TestedClass($generator = new asserter\generator()))
             ->and($value = uniqid())
             ->then
-                ->exception(function() use ($object, $value) {
+                ->exception(function () use ($object, $value) {
                     $object->setWith($value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')

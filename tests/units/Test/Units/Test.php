@@ -4,7 +4,6 @@ namespace atoum\AtoumBundle\tests\units\Test\Units;
 require_once __DIR__ . '/../../../bootstrap.php';
 
 use mageekguy\atoum;
-use mageekguy\atoum\asserter;
 
 class Test extends atoum\test
 {
@@ -24,7 +23,7 @@ class Test extends atoum\test
                     ->call('setHandler')->withArguments('faker')->once()
             ->if($object = new \mock\atoum\AtoumBundle\Test\Units\Test())
             ->and($this->calling($object)->getFaker = $generator = new \mock\Faker\Generator())
-            ->and($this->calling($generator)->__call = function() {})
+            ->and($this->calling($generator)->__call->doesNothing())
             ->then
                 ->variable($object->faker->{$provider = uniqid()}())
                 ->mock($generator)
