@@ -12,7 +12,6 @@ This bundle provides a (very) simple integration of [atoum](https://github.com/a
 ```json
 {
     "require": {
-        "atoum/atoum": "dev-master",
         "atoum/atoum-bundle": "dev-master"
     }
 }
@@ -23,7 +22,6 @@ In most of the cases you don't need AtoumBundle in your production environment.
 ```json
 {
     "require-dev": {
-        "atoum/atoum": "dev-master",
         "atoum/atoum-bundle": "dev-master"
     }
 }
