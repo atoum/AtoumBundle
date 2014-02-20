@@ -70,7 +70,7 @@ $ php app/console atoum --env=test # launch tests from configuration.
 
 ## Simple Usage
 
-Make your test class extends the ```atoum\AtoumBundle\Test\Units\Test``` class of the bundle.
+Make your test class extend the ```atoum\AtoumBundle\Test\Units\Test``` class of the bundle.
 
 *Don't forget to load this class with your favorite method (require, autoload, ...) if you don't use composer.*
 
