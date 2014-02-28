@@ -52,6 +52,8 @@ EOF
                 ->addOption('bootstrap-file', 'bf', InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
                 ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
                 ->addOption('max-children-number', 'mcn', InputOption::VALUE_REQUIRED, 'Maximum number of sub-processus which will be run simultaneously')
+                ->addOption('xunit-report-file', 'xrf', InputOption::VALUE_REQUIRED, 'Define the xunit report file')
+                ->addOption('clover-report-file', 'crf', InputOption::VALUE_REQUIRED, 'Define the clover report file')
         ;
     }
 
@@ -96,6 +98,27 @@ EOF
 
         if ($input->getOption('max-children-number')) {
             $this->setAtoumArgument('--max-children-number', (int) $input->getOption('max-children-number'));
+        }
+
+        if ($input->getOption('xunit-report-file')) {
+            $xunit = new \mageekguy\atoum\reports\asynchronous\xunit();
+            $runner->addReport($xunit);
+            $writerXunit = new \mageekguy\atoum\writers\file($input->getOption('xunit-report-file'));
+            $xunit->addWriter($writerXunit);
+        }
+
+        if ($input->getOption('clover-report-file')) {
+            $clover = new \mageekguy\atoum\reports\asynchronous\clover();
+            $runner->addReport($clover);
+            $writerClover = new \mageekguy\atoum\writers\file($input->getOption('clover-report-file'));
+            $clover->addWriter($writerClover);
+        }
+
+        if ($input->getOption('xunit-report-file') || $input->getOption('clover-report-file')) {
+            $reportCli = new \mageekguy\atoum\reports\realtime\cli();
+            $runner->addReport($reportCli);
+            $writerCli = new \mageekguy\atoum\writers\std\out();
+            $reportCli->addWriter($writerCli);
         }
 
         $runner->run($this->getAtoumArguments());
