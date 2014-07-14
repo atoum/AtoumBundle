@@ -2,7 +2,7 @@
 
 namespace atoum\AtoumBundle\Scripts;
 
-use \mageekguy\atoum\scripts\runner as BaseRunner;
+use mageekguy\atoum\scripts\runner as BaseRunner;
 use mageekguy\atoum\cli;
 use mageekguy\atoum\php;
 
