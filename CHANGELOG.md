@@ -1,3 +1,8 @@
+`dev-master`
+=====
+
+* Add loop mode support ([@Djuuu])
+
 1.4.1
 =====
 
@@ -46,3 +51,4 @@
   * Add ControllerTest class
 
 [@jubianchi]: https://github.com/jubianchi
+[@Djuuu]: https://github.com/Djuuu
