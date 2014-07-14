@@ -28,6 +28,30 @@ class Runner extends BaseRunner
             $php->addOption('--force-terminal');
         }
 
+        $addScoreFile = false;
+
+        foreach ($this->argumentsParser->getValues() as $argument => $values) {
+            switch ($argument)
+            {
+                case '-sf':
+                case '--score-file':
+                    $addScoreFile = true;
+                    break;
+            }
+        }
+
+        if ($this->scoreFile === null) {
+            $this->scoreFile = sys_get_temp_dir() . '/atoum.score';
+
+            @unlink($this->scoreFile);
+
+            $addScoreFile = true;
+        }
+
+        if ($addScoreFile === true) {
+            $php->addOption(sprintf('--score-file=%s', $this->scoreFile));
+        }
+
         while ($this->canRun() === true) {
             passthru((string) $php);
 

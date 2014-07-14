@@ -50,10 +50,11 @@ EOF
                 )
                 ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
                 ->addOption('bootstrap-file', 'bf', InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
-                ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
+                ->addOption('no-code-coverage', 'ncc', InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
                 ->addOption('max-children-number', 'mcn', InputOption::VALUE_REQUIRED, 'Maximum number of sub-processus which will be run simultaneously')
                 ->addOption('loop', 'l', InputOption::VALUE_NONE, 'Enables Atoum loop mode')
                 ->addOption('--force-terminal', '', InputOption::VALUE_NONE, '')
+                ->addOption('--score-file', '', InputOption::VALUE_REQUIRED, '')
         ;
     }
 
@@ -106,6 +107,10 @@ EOF
 
         if ($input->getOption('force-terminal')) {
             $this->setAtoumArgument('--force-terminal');
+        }
+
+        if ($input->getOption('score-file')) {
+            $this->setAtoumArgument('--score-file', $input->getOption('score-file'));
         }
 
         $runner->run($this->getAtoumArguments());
