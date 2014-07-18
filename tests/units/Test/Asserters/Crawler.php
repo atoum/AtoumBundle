@@ -17,9 +17,18 @@ class Crawler extends atoum\test
     public function test__construct()
     {
         $this
-            ->if($object = new TestedClass($generator = new asserter\generator()))
+            ->if($object = new TestedClass())
             ->then
-                ->object($object->getLocale())->isIdenticalTo($generator->getLocale())
+                ->object($object->getLocale())->isEqualTo(new atoum\locale())
+                ->object($object->getGenerator())->isEqualTo(new asserter\generator())
+                ->object($object->getAnalyzer())->isEqualTo(new atoum\tools\variable\analyzer())
+            ->if($generator = new asserter\generator())
+            ->and($locale = new atoum\locale())
+            ->and($analyzer = new atoum\tools\variable\analyzer())
+            ->and($object = new TestedClass($generator, $analyzer, $locale))
+            ->then
+                ->object($object->getLocale())->isIdenticalTo($locale)
+                ->object($object->getAnalyzer())->isIdenticalTo($analyzer)
                 ->object($object->getGenerator())->isIdenticalTo($generator)
         ;
     }
@@ -34,7 +43,14 @@ class Crawler extends atoum\test
                     $object->setWith($value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not a crawler'), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not an object'), $object->getAnalyzer()->getTypeOf($value)))
+            ->if($value = new \StdClass())
+            ->then
+                ->exception(function () use ($object, $value) {
+                    $object->setWith($value);
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not a crawler'), $object->getAnalyzer()->getTypeOf($value)))
             ->if($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
             ->then
                 ->object($object->setWith($crawler))->isIdenticalTo($object)

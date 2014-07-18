@@ -4,11 +4,12 @@ namespace atoum\AtoumBundle\Test\Asserters;
 
 use atoum\AtoumBundle\DomCrawler\DOMNode;
 use mageekguy\atoum;
+use mageekguy\atoum\tools;
 use mageekguy\atoum\asserter;
 use mageekguy\atoum\asserters;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
-class Element extends asserters\object
+class Element extends Crawler
 {
     /** @var \atoum\AtoumBundle\Test\Asserters\Crawler  */
     private $parent;
@@ -35,15 +36,27 @@ class Element extends asserters\object
     private $childCount;
 
     /**
-     * @param asserter\generator $generator
-     * @param Crawler|Element    $parent
+     * @param asserter\generator      $generator
+     * @param tools\variable\analyzer $analyzer
+     * @param atoum\locale            $locale
      */
-    public function __construct(asserter\generator $generator, $parent)
+    public function __construct(asserter\generator $generator = null, tools\variable\analyzer $analyzer = null, atoum\locale $locale = null)
     {
-        parent::__construct($generator);
+        parent::__construct($generator, $analyzer, $locale);
 
-        $this->parent = $parent;
         $this->atLeast = 1;
+    }
+
+    /**
+     * @param Crawler $parent
+     *
+     * @return $this
+     */
+    public function setParent(Crawler $parent = null)
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 
     /**
@@ -55,21 +68,12 @@ class Element extends asserters\object
     }
 
     /**
-     * @param mixed       $value
-     * @param string|null $selector
+     * @param string $selector
      *
      * @return $this
      */
-    public function setWith($value, $selector = null)
+    public function setSelector($selector)
     {
-        parent::setWith($value, false);
-
-        if (self::isCrawler($this->value) === false) {
-            $this->fail(sprintf($this->getLocale()->_('%s is not a crawler'), $this));
-        } else {
-            $this->pass();
-        }
-
         $this->selector = $selector;
 
         return $this;
@@ -233,8 +237,11 @@ class Element extends asserters\object
     {
         $this->assertAtLeast($this->valueIsSet()->value);
 
-        $asserter = new self($this->getGenerator(), $this);
-        $asserter->setWith($this->valueIsSet()->value->filter($selector), $selector);
+        $asserter = new self($this->getGenerator(), $this->getAnalyzer(), $this->getLocale());
+        $asserter
+            ->setParent($this)
+            ->setWith($this->valueIsSet()->value->filter($selector))
+        ;
 
         return $asserter;
     }
@@ -467,15 +474,5 @@ class Element extends asserters\object
             $attributes,
             $this->getContent() ? '[@content="' . $this->getContent() . '"]' : ''
         );
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return bool
-     */
-    protected static function isCrawler($value)
-    {
-        return ($value instanceof DomCrawler);
     }
 }

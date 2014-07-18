@@ -14,14 +14,16 @@ class Crawler extends asserters\object
      *
      * @return $this
      */
-    public function setWith($value, $checkType = false)
+    public function setWith($value, $checkType = true)
     {
         parent::setWith($value, $checkType);
 
-        if (self::isCrawler($this->value) === false) {
-            $this->fail(sprintf($this->getLocale()->_('%s is not a crawler'), $this));
-        } else {
-            $this->pass();
+        if ($checkType === true) {
+            if (self::isCrawler($this->value) === false) {
+                $this->fail(sprintf($this->getLocale()->_('%s is not a crawler'), $this));
+            } else {
+                $this->pass();
+            }
         }
 
         return $this;
@@ -34,9 +36,12 @@ class Crawler extends asserters\object
      */
     public function hasElement($element)
     {
-        $asserter = new Element($this->generator, $this);
+        $asserter = new Element($this->getGenerator(), $this->getAnalyzer(), $this->getLocale());
 
-        return $asserter->setWith($this->valueIsSet()->value->filter($element), $element);
+        return $asserter
+            ->setParent($this)
+            ->setWith($this->valueIsSet()->value->filter($element))
+        ;
     }
 
     /**

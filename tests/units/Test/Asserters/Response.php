@@ -17,9 +17,18 @@ class Response extends atoum\test
     public function test__construct()
     {
         $this
-            ->if($object = new TestedClass($generator = new asserter\generator()))
+            ->if($object = new TestedClass())
             ->then
-                ->object($object->getLocale())->isIdenticalTo($generator->getLocale())
+                ->object($object->getLocale())->isEqualTo(new atoum\locale())
+                ->object($object->getGenerator())->isEqualTo(new asserter\generator())
+                ->object($object->getAnalyzer())->isEqualTo(new atoum\tools\variable\analyzer())
+            ->if($generator = new asserter\generator())
+            ->and($locale = new atoum\locale())
+            ->and($analyzer = new atoum\tools\variable\analyzer())
+            ->and($object = new TestedClass($generator, $analyzer, $locale))
+            ->then
+                ->object($object->getLocale())->isIdenticalTo($locale)
+                ->object($object->getAnalyzer())->isIdenticalTo($analyzer)
                 ->object($object->getGenerator())->isIdenticalTo($generator)
         ;
     }
@@ -34,7 +43,7 @@ class Response extends atoum\test
                     $object->setWith($value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not a response'), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not a response'), $object->getAnalyzer()->getTypeOf($value)))
             ->if($response = new \mock\Symfony\Component\HttpFoundation\Response())
             ->then
                 ->object($object->setWith($response))->isIdenticalTo($object)
@@ -54,7 +63,7 @@ class Response extends atoum\test
                     $object->hasStatus($value = rand(200, 300));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Status %s is not equal to %s'), $object->getTypeOf($status), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Status %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($status), $object->getAnalyzer()->getTypeOf($value)))
             ->if($status = rand(200, 300))
             ->then
                 ->object($object->hasStatus($status))->isIdenticalTo($object)
@@ -74,7 +83,7 @@ class Response extends atoum\test
                     $object->hasAge($value = rand(200, PHP_INT_MAX));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Age %s is not equal to %s'), $object->getTypeOf($age), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Age %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($age), $object->getAnalyzer()->getTypeOf($value)))
             ->if($age = rand(200, 300))
             ->then
                 ->object($object->hasAge($age))->isIdenticalTo($object)
@@ -94,7 +103,7 @@ class Response extends atoum\test
                     $object->hasMaxAge($value = rand(200, PHP_INT_MAX));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Max age %s is not equal to %s'), $object->getTypeOf($age), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Max age %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($age), $object->getAnalyzer()->getTypeOf($value)))
             ->if($age = rand(200, 300))
             ->then
                 ->object($object->hasMaxAge($age))->isIdenticalTo($object)
@@ -114,7 +123,7 @@ class Response extends atoum\test
                     $object->hasCharset($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Charset %s is not equal to %s'), $object->getTypeOf($charset), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Charset %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($charset), $object->getAnalyzer()->getTypeOf($value)))
             ->if($charset = uniqid())
             ->then
                 ->object($object->hasCharset($charset))->isIdenticalTo($object)
@@ -134,7 +143,7 @@ class Response extends atoum\test
                     $object->hasContent($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Content %s is not equal to %s'), $object->getTypeOf($content), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Content %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($content), $object->getAnalyzer()->getTypeOf($value)))
             ->if($content = uniqid())
             ->then
                 ->object($object->hasContent($content))->isIdenticalTo($object)
@@ -154,7 +163,7 @@ class Response extends atoum\test
                     $object->hasEtag($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Etag %s is not equal to %s'), $object->getTypeOf($etag), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Etag %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($etag), $object->getAnalyzer()->getTypeOf($value)))
             ->if($etag = uniqid())
             ->then
                 ->object($object->hasEtag($etag))->isIdenticalTo($object)
@@ -174,7 +183,7 @@ class Response extends atoum\test
                     $object->hasVersion($value = uniqid());
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Version %s is not equal to %s'), $object->getTypeOf($version), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Version %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($version), $object->getAnalyzer()->getTypeOf($value)))
             ->if($version = uniqid())
             ->then
                 ->object($object->hasVersion($version))->isIdenticalTo($object)
@@ -194,7 +203,7 @@ class Response extends atoum\test
                     $object->hasTtl($value = rand(200, PHP_INT_MAX));
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('TTL %s is not equal to %s'), $object->getTypeOf($ttl), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('TTL %s is not equal to %s'), $object->getAnalyzer()->getTypeOf($ttl), $object->getAnalyzer()->getTypeOf($value)))
             ->if($ttl = uniqid())
             ->then
                 ->object($object->hasTtl($ttl))->isIdenticalTo($object)
@@ -216,14 +225,14 @@ class Response extends atoum\test
                     $object->hasHeader($header, $value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Value null is not equal to %s for header %s'), $object->getTypeOf($value), $header))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Value null is not equal to %s for header %s'), $object->getAnalyzer()->getTypeOf($value), $header))
             ->if($this->calling($headers)->get = $actual = uniqid())
             ->then
                 ->exception(function () use ($object, $header, $value) {
                     $object->hasHeader($header, $value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Value %s is not equal to %s for header %s'), $object->getTypeOf($actual), $object->getTypeOf($value), $header))
+                    ->hasMessage(sprintf($generator->getLocale()->_('Value %s is not equal to %s for header %s'), $object->getAnalyzer()->getTypeOf($actual), $object->getAnalyzer()->getTypeOf($value), $header))
             ->if($this->calling($headers)->get = $value)
             ->then
                 ->object($object->hasHeader($header, $value))->isIdenticalTo($object)
