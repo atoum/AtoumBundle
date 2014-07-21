@@ -28,10 +28,6 @@
     "require-dev": {
         "symfony/form": "2.*"
     },
-    "replace": {
-        "rezzza/atoum-bundle": "*",
-        "jedi/atoum-bundle": "*"
-    },
     "autoload": {
         "psr-0": {
             "atoum\\AtoumBundle": ""
