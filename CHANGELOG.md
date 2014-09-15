@@ -1,4 +1,5 @@
-* master (next 1.1.0)
+1.1.0
+=======
 
   * Add command to launch tests on bundles.
   * Add fluent interface for controllers testing
@@ -9,7 +10,8 @@
   * Add two annotations to enable/disable kernel reset in tests : @resetKernel and @noResetKernel
   * Compatibility improvement with symfony/dom-crawler 2.3 and 2.4
 
-* 1.0.0 (2012)
+1.0.0 (2012)
+============
 
   * Move the bundle to atoum vendor namespace
   * Add ControllerTest class
