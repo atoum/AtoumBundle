@@ -2,6 +2,7 @@
 
 namespace atoum\AtoumBundle\Test\Form;
 
+use mageekguy\atoum;
 use atoum\AtoumBundle\Test\Units\Test;
 use mageekguy\atoum;
 use Symfony\Component\Form\FormBuilder;
@@ -41,8 +42,9 @@ abstract class FormTestCase extends Test
 
         // Mocks the event dispatcher
         // Class exists test to prevent mocking again the EventDispatcherInterface if several form type tests are set to execute together
-        if (!class_exists('\mock\Symfony\Component\EventDispatcher\EventDispatcherInterface'))
+        if (!class_exists('\mock\Symfony\Component\EventDispatcher\EventDispatcherInterface')) {
             $this->mockGenerator->generate('\Symfony\Component\EventDispatcher\EventDispatcherInterface');
+        }
         $this->dispatcher = new \mock\Symfony\Component\EventDispatcher\EventDispatcherInterface;
         $this->builder = new FormBuilder(null, null, $this->dispatcher, $this->factory);
     }
