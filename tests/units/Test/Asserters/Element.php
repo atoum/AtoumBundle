@@ -18,18 +18,25 @@ class Element extends atoum\test
     public function test__construct()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->and($object = new TestedClass())
             ->then
-                ->object($object->getLocale())->isIdenticalTo($generator->getLocale())
-                ->object($object->getGenerator())->isIdenticalTo($generator)
-                ->object($object->getParent())->isIdenticalTo($parent)
+                ->object($object->getLocale())->isEqualTo(new atoum\locale())
+                ->object($object->getAnalyzer())->isEqualTo(new atoum\tools\variable\analyzer())
+                ->object($object->getGenerator())->isEqualTo(new asserter\generator())
+                ->variable($object->getParent())->isNull()
                 ->integer($object->getAtLeast())->isEqualTo(1)
                 ->variable($object->getExactly())->isNull()
                 ->array($object->getAttributes())->isEmpty()
                 ->variable($object->getContent())->isNull()
                 ->variable($object->getChildCount())->isNull()
+            ->if($generator = new asserter\generator())
+            ->and($locale = new atoum\locale())
+            ->and($analyzer = new atoum\tools\variable\analyzer())
+            ->and($object = new TestedClass($generator, $analyzer, $locale))
+            ->then
+                ->object($object->getLocale())->isIdenticalTo($locale)
+                ->object($object->getAnalyzer())->isIdenticalTo($analyzer)
+                ->object($object->getGenerator())->isIdenticalTo($generator)
         ;
     }
 
@@ -37,15 +44,21 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->and($object = new TestedClass($generator))
             ->and($value = uniqid())
             ->then
                 ->exception(function () use ($object, $value) {
                     $object->setWith($value);
                 })
                     ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not a crawler'), $object->getTypeOf($value)))
+                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not an object'), $object->getAnalyzer()->getTypeOf($value)))
+            ->and($value = new \StdClass())
+            ->then
+                ->exception(function () use ($object, $value) {
+                    $object->setWith($value);
+                })
+                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('%s is not a crawler'), $object->getAnalyzer()->getTypeOf($value)))
             ->if($crawler = new \Symfony\Component\DomCrawler\Crawler())
             ->then
                 ->object($object->setWith($crawler))->isIdenticalTo($object)
@@ -55,9 +68,7 @@ class Element extends atoum\test
     public function testWithContent()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->and($content = uniqid())
             ->then
                 ->object($object->withContent($content))->isIdenticalTo($object)
@@ -68,9 +79,7 @@ class Element extends atoum\test
     public function testHasNoContent()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->then
                 ->object($object->hasNoContent())->isIdenticalTo($object)
                 ->string($object->getContent())->isEmpty()
@@ -81,8 +90,7 @@ class Element extends atoum\test
     {
         $this
             ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->and($object = new TestedClass($generator))
             ->and($elem = new \DOMElement(uniqid('_'), 'a value'))
             ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($elem)))
             ->and($object->setWith($crawler))
@@ -127,9 +135,7 @@ class Element extends atoum\test
     public function testWithAttibute()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->and($attribute = uniqid())
             ->and($value = uniqid())
             ->then
@@ -146,9 +152,7 @@ class Element extends atoum\test
     public function testExactly()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
                 ->object($object->exactly($count))->isIdenticalTo($object)
@@ -159,9 +163,7 @@ class Element extends atoum\test
     public function testAtMost()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
                 ->object($object->atMost($count))->isIdenticalTo($object)
@@ -172,9 +174,7 @@ class Element extends atoum\test
     public function testAtLeast()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
                 ->object($object->atLeast($count))->isIdenticalTo($object)
@@ -185,9 +185,7 @@ class Element extends atoum\test
     public function testHasNoChild()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->then
                 ->object($object->hasNoChild())->isIdenticalTo($object)
                 ->integer($object->getChildCount())->isEqualTo(0)
@@ -197,9 +195,7 @@ class Element extends atoum\test
     public function testHasChildCount()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->and($count = rand(0, PHP_INT_MAX))
             ->then
                 ->object($object->hasChildExactly($count))->isIdenticalTo($object)
@@ -210,9 +206,7 @@ class Element extends atoum\test
     public function testIsEmpty()
     {
         $this
-            ->if($generator = new asserter\generator())
-            ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->if($object = new TestedClass())
             ->then
                 ->object($object->isEmpty())->isIdenticalTo($object)
                 ->integer($object->getChildCount())->isEqualTo(0)
@@ -225,9 +219,10 @@ class Element extends atoum\test
         $this
             ->if($generator = new asserter\generator())
             ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->and($object = new TestedClass($generator))
             ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
             ->and($object->setWith($crawler))
+            ->and($object->setParent($parent))
             ->then
                 ->exception(function () use ($object) {
                     $object->hasChild(uniqid());
@@ -247,7 +242,8 @@ class Element extends atoum\test
             ->given($document = new \DOMDocument())
             ->if($generator = new asserter\generator())
             ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->and($object = new TestedClass($generator))
+            ->and($object->setParent($parent))
             ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
             ->and($this->calling($crawler)->count = 0)
             ->and($object->setWith($crawler))
@@ -290,7 +286,8 @@ class Element extends atoum\test
 
             ->if($generator = new asserter\generator())
             ->and($parent = new CrawlerAssert($generator))
-            ->and($object = new TestedClass($generator, $parent))
+            ->and($object = new TestedClass($generator))
+            ->and($object->setParent($parent))
             ->and($elem = $document->createElement(uniqid('_')))
             ->and($otherElem = $document->createElement(uniqid('_')))
             ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($elem, $otherElem)))
