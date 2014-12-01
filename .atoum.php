@@ -1,4 +1,5 @@
 <?php
+
 use \mageekguy\atoum;
 
 define('TEST_ROOT', __DIR__ . DIRECTORY_SEPARATOR . 'tests');
@@ -18,8 +19,7 @@ function colorized() {
     return ($color >= 256);
 }
 
-if(colorized())
-{
+if (colorized()) {
     $script
         ->addDefaultReport()
             ->addField(new atoum\report\fields\runner\atoum\logo())
