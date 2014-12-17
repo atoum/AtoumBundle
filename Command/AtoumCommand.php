@@ -60,7 +60,7 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $runner = new runner('atoum');
+        $runner = $this->getContainer()->get('atoum.runner');
 
         $bundles = $input->getArgument('bundles');
         if (count($bundles) > 0) {

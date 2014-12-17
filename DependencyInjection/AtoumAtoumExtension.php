@@ -30,6 +30,9 @@ class AtoumAtoumExtension extends Extension
         $loader->load('configuration.xml');
 
         $container->setParameter('atoum.bundles', $config['bundles']);
+        if (isset($config['runner'])) {
+            $container->setParameter('atoum.runner.service', $config['runner']);
+        }
     }
 
     /**
