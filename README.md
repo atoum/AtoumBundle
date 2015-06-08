@@ -111,6 +111,42 @@ class helloWorld extends Units\WebTestCase
 }
 ```
 
+## Command test case
+
+You can also easily test a command:
+
+```php
+<?php
+
+namespace My\Bundle\FoobarBundle\Tests\Units\Command;
+
+use atoum\AtoumBundle\Test\Units as AtoumBundle;
+use mageekguy\atoum;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Tester\CommandTester;
+
+// Assuming that this command will display "Success" if succes, and returns a boolean
+use My\Bundle\FoobarBundle\Tests\Units\Command\FoobarCommand as Base;
+
+class FoobarCommand extends AtoumBundle\CommandTestCase
+{
+    public function testExecute()
+    {
+        $this
+            ->given(
+                $command = new Base()
+            )
+            ->if($commandTester = $this->createCommandTester($command))
+            ->then
+                ->boolean($commandTester->execute())
+                    ->isTrue()
+                ->string($commandTester->getDisplay())
+                    ->contains("Success")
+        ;
+    }
+}
+```
+
 ### Known issues
 
 - The path of the AppKernel cannot be found, override the method ```getKernelDirectory```
