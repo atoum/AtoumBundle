@@ -52,6 +52,7 @@ EOF
                 ->addOption('bootstrap-file', 'bf', InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
                 ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
                 ->addOption('max-children-number', 'mcn', InputOption::VALUE_REQUIRED, 'Maximum number of sub-processus which will be run simultaneously')
+                ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enables Atoum debug mode')
         ;
     }
 
@@ -96,6 +97,10 @@ EOF
 
         if ($input->getOption('max-children-number')) {
             $this->setAtoumArgument('--max-children-number', (int) $input->getOption('max-children-number'));
+        }
+
+        if ($input->getOption('debug')) {
+            $this->setAtoumArgument('--debug');
         }
 
         $runner->run($this->getAtoumArguments());
