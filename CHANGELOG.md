@@ -1,3 +1,8 @@
+1.2.1
+=====
+
+* Add xunit and clover report file options
+
 1.2.0
 =====
 
