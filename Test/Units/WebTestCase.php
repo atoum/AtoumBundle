@@ -3,7 +3,6 @@
 namespace atoum\AtoumBundle\Test\Units;
 
 use Symfony\Bundle\FrameworkBundle\Client;
-use atoum\AtoumBundle\Test\Asserters;
 use mageekguy\atoum;
 use Symfony\Component\CssSelector\CssSelector;
 
@@ -23,6 +22,7 @@ abstract class WebTestCase extends Test
         parent::__construct($adapter, $annotationExtractor, $asserterGenerator, $assertionManager, $reflectionClassFactory);
 
         $generator = $this->getAsserterGenerator();
+
         $test = $this;
         $crawler = null;
         $client = null;
@@ -30,7 +30,7 @@ abstract class WebTestCase extends Test
         $this->getAssertionManager()
             ->setHandler(
                 'request',
-                function(array $options = array(), array $server = array(), array $cookies = array()) use (& $client, $test, $generator) {
+                function(array $options = array(), array $server = array(), array $cookies = array()) use (& $client, $test) {
                     $client = $test->createClient($options, $server, $cookies);
 
                     return $test;
@@ -52,16 +52,14 @@ abstract class WebTestCase extends Test
             ->setHandler('OPTIONS', $options)
             ->setHandler(
                 'crawler',
-                function ($strict = false) use (& $crawler, $generator) {
+                function ($strict = false) use (& $crawler, $generator, $test) {
                     if ($strict) {
                         CssSelector::enableHtmlExtension();
                     } else {
                         CssSelector::disableHtmlExtension();
                     }
 
-                    $asserter = new Asserters\Crawler($generator);
-
-                    return $asserter->setWith($crawler);
+                    return $generator->getAsserterInstance('\\atoum\\AtoumBundle\\Test\\Asserters\\Crawler', array($crawler), $test);
                 }
             )
         ;
@@ -78,13 +76,13 @@ abstract class WebTestCase extends Test
     protected function getSendRequestHandler(& $client, & $crawler, $method)
     {
         $generator = $this->getAsserterGenerator();
+        $test = $this;
 
-        return function($path, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true) use (& $client, & $crawler, $method, $generator) {
+        return function($path, array $parameters = array(), array $files = array(), array $server = array(), $content = null, $changeHistory = true) use (& $client, & $crawler, $method, $generator, $test) {
             /** @var $client \Symfony\Bundle\FrameworkBundle\Client */
             $crawler = $client->request($method, $path, $parameters, $files, $server, $content, $changeHistory);
-            $asserter = new Asserters\Response($generator);
 
-            return $asserter->setWith($client->getResponse());
+            return $generator->getAsserterInstance('\\atoum\\AtoumBundle\\Test\\Asserters\\Response', array($client->getResponse()), $test);
         };
     }
 
