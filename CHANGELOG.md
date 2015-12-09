@@ -1,4 +1,4 @@
-1.2.1
+1.3.0
 =====
 
 * Add xunit and clover report file options
