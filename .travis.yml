@@ -15,7 +15,7 @@ env:
 
 script:
   - composer update $COMPOSER_PREFER
-  - bin/atoum
+  - bin/atoum -ncc
 
 notifications:
     irc: "irc.freenode.org##atoum"
