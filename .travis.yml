@@ -5,19 +5,17 @@ php:
     - 5.3
     - 5.4
     - 5.5
+    - 5.6
+    - 7.0
 
 env:
-    global:
-        - secure: "AwZKGvI1XksV7d1IHzn86m4Hsgk+LOXU6vYTcvBkLbDR40DOBUz7pH1LAX0S\n7KLtKYVHTOwqBQH4QyJHcFDEQ/u/ODmTzPIE8uirMlL8OLbIFMpGVKhjsK6C\nSWX0HS+6w+cN3+MzXK0ie3Pg525PQ+thgq7fJwElNJCqk6SoEkM="
-
-before_script:
-    - "[ ! -d ~/.composer ] && mkdir ~/.composer || true"
-    - "[ ! -z $GITHUB_TOKEN ] && echo \"{ \\\"config\\\": { \\\"github-oauth\\\": { \\\"github.com\\\": \\\"$GITHUB_TOKEN\\\" } } }\" > ~/.composer/config.json || true"
-    - wget http://getcomposer.org/composer.phar
-    - "[ ! -z $GITHUB_TOKEN ] && php composer.phar install --dev || php composer.phar install --dev --prefer-source"
+  matrix:
+    - COMPOSER_PREFER="--prefer-stable"
+    - COMPOSER_PREFER="--prefer-lowest"
 
 script:
-    - bin/atoum
+  - composer update $COMPOSER_PREFER
+  - bin/atoum
 
 notifications:
     irc: "irc.freenode.org##atoum"
