@@ -1,7 +1,7 @@
 <?php
 namespace atoum\AtoumBundle\DomCrawler;
 
-use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler;
 
 class DOMNode
 {
@@ -17,8 +17,8 @@ class DOMNode
      */
     public function __construct($node)
     {
-        if (($node instanceof Crawler || $node instanceof \DOMNode) === false) {
-            throw new \InvalidArgumentException('Node should be an instance of either \\DOMNode or \\Symfony\\Component\\DomCrawler\\Crawler');
+        if (($node instanceof DomCrawler\Crawler || $node instanceof \DOMNode) === false) {
+            throw new \InvalidArgumentException('Node should be an instance of either \\DOMNode or \\Symfony\\Component\\DomCrawler\\Crawler, got ' . get_class($node));
         }
 
         $this->node = $node;

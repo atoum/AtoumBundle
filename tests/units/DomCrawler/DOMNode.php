@@ -4,6 +4,7 @@ namespace atoum\AtoumBundle\tests\units\DomCrawler;
 require_once __DIR__ . '/../../bootstrap.php';
 
 use mageekguy\atoum;
+use atoum\AtoumBundle\DomCrawler\Crawler;
 use atoum\AtoumBundle\DomCrawler\DOMNode as TestedClass;
 
 class DOMNode extends atoum\test
@@ -17,7 +18,7 @@ class DOMNode extends atoum\test
                     new TestedClass($node);
                 })
                     ->isInstanceOf('\\InvalidArgumentException')
-                    ->hasMessage('Node should be an instance of either \\DOMNode or \\Symfony\\Component\\DomCrawler\\Crawler')
+                    ->hasMessage('Node should be an instance of either \\DOMNode or \\Symfony\\Component\\DomCrawler\\Crawler, got ' . get_class($node))
             ->if($node = new \DOMElement(uniqid('_')))
             ->then
                 ->object($object = new TestedClass($node))
@@ -73,17 +74,15 @@ class DOMNode extends atoum\test
             ->if($node = $document->createElement(uniqid('_')))
             ->and($child = $document->createElement(uniqid('_')))
             ->and($node->appendChild($child))
-            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($node)))
+            ->and($crawler = new Crawler(array($node)))
             ->and($object = new TestedClass($crawler))
             ->then
                 ->object($children = $object->children())->isInstanceOf('\\Symfony\\Component\\DomCrawler\\Crawler')
-                ->object($children->getNode(0))
-                    ->isEqualTo($child)
+                ->boolean($children->contains($child))->isTrue()
             ->if($object = new TestedClass($node))
             ->then
                 ->object($children = $object->children())->isInstanceOf('\\Symfony\\Component\\DomCrawler\\Crawler')
-                ->object($children->getNode(0))
-                    ->isEqualTo($child)
+                ->boolean($children->contains($child))->isTrue()
         ;
     }
 }
