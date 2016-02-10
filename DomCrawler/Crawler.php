@@ -14,6 +14,10 @@ class Crawler extends DomCrawler\Crawler
 {
     public function contains($object)
     {
+        if ($this instanceof \SplObjectStorage) {
+            return parent::contains($object);
+        }
+
         foreach ($this as $node) {
             if ($node === $object) {
                 return true;
