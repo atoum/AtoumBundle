@@ -1,7 +1,19 @@
+1.4.0
+=====
+
+* Symfony3 compatibility
+* Minimum version of Symfony : 2.3
+* Minimum version of atoum : 2.1
+
 1.3.0
 =====
 
 * Add xunit and clover report file options
+
+1.2.1
+=====
+
+* 1.2.X depends on atoum < 2.4
 
 1.2.0
 =====
