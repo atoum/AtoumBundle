@@ -10,8 +10,6 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 /**
  * @property \Faker\Generator $faker
  * @method \Faker\Generator faker($locale = 'en_US')
- * @method Test resetKernel($kernelReset)
- * @method Test noResetKernel()
  */
 abstract class Test extends atoum\test
 {
