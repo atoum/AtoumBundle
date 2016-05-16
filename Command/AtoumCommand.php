@@ -121,7 +121,27 @@ EOF
             $reportCli->addWriter($writerCli);
         }
 
-        $runner->run($this->getAtoumArguments());
+        try {
+            $score = $runner->run($this->getAtoumArguments())->getRunner()->getScore();
+
+            $isSuccess = $score->getFailNumber() <= 0 && $score->getErrorNumber() <= 0 && $score->getExceptionNumber() <= 0;
+
+            if ($runner->shouldFailIfVoidMethods() && $score->getVoidMethodNumber() > 0)
+            {
+                $isSuccess = false;
+            }
+
+            if ($runner->shouldFailIfSkippedMethods() && $score->getSkippedMethodNumber() > 0)
+            {
+                $isSuccess = false;
+            }
+
+            return $isSuccess ? 0 : 1;
+        } catch (\Exception $exception) {
+            $this->getApplication()->renderException($exception, $output);
+
+            return 2;
+        }
     }
 
     /**

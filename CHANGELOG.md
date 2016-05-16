@@ -1,3 +1,9 @@
+# `dev-master`
+
+## Bugfix
+
+* [#98](https://github.com/atoum/AtoumBundle/pull/98) Fix atoum command exit codes ([@jubianchi])
+
 1.4.0
 =====
 
@@ -37,3 +43,5 @@
 
   * Move the bundle to atoum vendor namespace
   * Add ControllerTest class
+
+[@jubianchi]: https://github.com/jubianchi
