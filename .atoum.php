@@ -1,5 +1,8 @@
 <?php
-use \mageekguy\atoum;
+
+use mageekguy\atoum;
+use mageekguy\atoum\reports;
+use mageekguy\atoum\writers\std;
 
 define('TEST_ROOT', __DIR__ . DIRECTORY_SEPARATOR . 'tests');
 
@@ -18,8 +21,7 @@ function colorized() {
     return ($color >= 256);
 }
 
-if(colorized())
-{
+if(colorized()) {
     $script
         ->addDefaultReport()
             ->addField(new atoum\report\fields\runner\atoum\logo())
@@ -30,3 +32,14 @@ if(colorized())
 $script->noCodeCoverageForNamespaces('mageekguy');
 $script->bootstrapFile(TEST_ROOT . DIRECTORY_SEPARATOR . 'bootstrap.php');
 $runner->addTestsFromDirectory(TEST_ROOT . DIRECTORY_SEPARATOR . 'units');
+
+if (file_exists(__DIR__ . '/vendor/autoload.php') === true) {
+    require_once __DIR__ . '/vendor/autoload.php';
+}
+
+if (class_exists('mageekguy\atoum\reports\telemetry') === true && version_compare(phpversion(), '5.5.0', '>=')) {
+    $telemetry = new reports\telemetry();
+    $telemetry->readProjectNameFromComposerJson(__DIR__ . '/composer.json');
+    $telemetry->addWriter(new std\out());
+    $runner->addReport($telemetry);
+}
