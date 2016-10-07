@@ -126,7 +126,7 @@ use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
 // Assuming that this command will display "Success" if succes, and returns a boolean
-use My\Bundle\FoobarBundle\Tests\Units\Command\FoobarCommand as Base;
+use My\Bundle\FoobarBundle\Command\FoobarCommand as Base;
 
 class FoobarCommand extends AtoumBundle\CommandTestCase
 {
