@@ -51,6 +51,7 @@ EOF
                 ->addArgument('bundles', InputArgument::IS_ARRAY, 'Launch tests of these bundles.')
                 ->addOption('bootstrap-file', 'bf', InputOption::VALUE_REQUIRED, 'Define the bootstrap file')
                 ->addOption('no-code-coverage', null, InputOption::VALUE_NONE, 'Disable code coverage (big speed increase)')
+                ->addOption('use-light-report', null, InputOption::VALUE_NONE, 'Reduce the output generated')
                 ->addOption('max-children-number', 'mcn', InputOption::VALUE_REQUIRED, 'Maximum number of sub-processus which will be run simultaneously')
                 ->addOption('xunit-report-file', 'xrf', InputOption::VALUE_REQUIRED, 'Define the xunit report file')
                 ->addOption('clover-report-file', 'crf', InputOption::VALUE_REQUIRED, 'Define the clover report file')
@@ -94,6 +95,10 @@ EOF
 
         if ($input->getOption('no-code-coverage')) {
             $this->setAtoumArgument('-ncc');
+        }
+
+        if ($input->getOption('use-light-report')) {
+            $this->setAtoumArgument('-ulr');
         }
 
         if ($input->getOption('max-children-number')) {
