@@ -53,10 +53,13 @@ abstract class WebTestCase extends Test
             ->setHandler(
                 'crawler',
                 function ($strict = false) use (& $crawler, $generator, $test) {
-                    if ($strict) {
-                        CssSelector::enableHtmlExtension();
-                    } else {
-                        CssSelector::disableHtmlExtension();
+                    // BC with Symfony <=2.8
+                    if (class_exists('Symfony\Component\CssSelector\CssSelector')) {
+                        if ($strict) {
+                            CssSelector::enableHtmlExtension();
+                        } else {
+                            CssSelector::disableHtmlExtension();
+                        }
                     }
 
                     return $generator->getAsserterInstance('\\atoum\\AtoumBundle\\Test\\Asserters\\Crawler', array($crawler), $test);
