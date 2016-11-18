@@ -25,6 +25,9 @@ class Configuration implements ConfigurationInterface
         return $tb
             ->root('atoum_atoum')
                 ->children()
+                    ->scalarNode('runner')
+                        ->info('Custom runner')
+                    ->end()
                     ->arrayNode('bundles')
                         ->useAttributeAsKey('name')
                         ->prototype('array')

@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use atoum\AtoumBundle\DependencyInjection\AtoumAtoumExtension;
 use atoum\AtoumBundle\DependencyInjection\Compiler\BundleDirectoriesResolverPass;
+use atoum\AtoumBundle\DependencyInjection\Compiler\RunnerResolverPass;
 
 /**
  * AtoumAtoumBundle
@@ -23,6 +24,7 @@ class AtoumAtoumBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new BundleDirectoriesResolverPass());
+        $container->addCompilerPass(new RunnerResolverPass());
     }
 
     /**
