@@ -58,6 +58,7 @@ EOF
                 ->addOption('loop', 'l', InputOption::VALUE_NONE, 'Enables Atoum loop mode')
                 ->addOption('force-terminal', '', InputOption::VALUE_NONE, '')
                 ->addOption('score-file', '', InputOption::VALUE_REQUIRED, '')
+                ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enables Atoum debug mode')
         ;
     }
 
@@ -161,6 +162,10 @@ EOF
 
         if ($input->getOption('score-file')) {
             $this->setAtoumArgument('--score-file', $input->getOption('score-file'));
+        }
+
+        if ($input->getOption('debug')) {
+            $this->setAtoumArgument('--debug');
         }
 
         $runner->run($this->getAtoumArguments());
