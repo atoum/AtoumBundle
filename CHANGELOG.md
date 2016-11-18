@@ -1,4 +1,4 @@
-`dev-master`
+1.5.0
 ===========
 
 * [#106](https://github.com/atoum/AtoumBundle/pull/106) Add debug option ([@Djuuu])
