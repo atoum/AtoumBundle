@@ -1,8 +1,6 @@
 <?php
 namespace atoum\AtoumBundle\tests\units\DomCrawler;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use mageekguy\atoum;
 use atoum\AtoumBundle\DomCrawler\Crawler;
 use atoum\AtoumBundle\DomCrawler\DOMNode as TestedClass;

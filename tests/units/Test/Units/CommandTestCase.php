@@ -2,8 +2,6 @@
 
 namespace atoum\AtoumBundle\tests\units\Test\Units;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 use mageekguy\atoum;
 
 class CommandTestCase extends atoum\test
@@ -36,4 +34,3 @@ class CommandTestCase extends atoum\test
         ;
     }
 }
-
