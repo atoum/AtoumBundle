@@ -1,6 +1,7 @@
 `dev-master`
 ===========
 
+* [#105](https://github.com/atoum/AtoumBundle/pull/105) Add phpDoc on Test and WebTest classes ([@maxailloud])
 * [#104](https://github.com/atoum/AtoumBundle/pull/104) Add loop mode support ([@Djuuu])
 * [#103](https://github.com/atoum/AtoumBundle/pull/103) Improve compatibility with Symfony 3 ([@lolautruche])
 * [#100](https://github.com/atoum/AtoumBundle/pull/100) Add option to display a light report ([@gpaton])
@@ -56,3 +57,5 @@
 [@Djuuu]: https://github.com/Djuuu
 [@lolautruche]: https://github.com/lolautruche
 [@gpaton]: https://github.com/gpaton
+[@maxailloud]: https://github.com/maxailloud
+
