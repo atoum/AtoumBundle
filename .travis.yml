@@ -8,7 +8,7 @@ php:
     - 5.5
     - 5.6
     - 7.0
-
+    - 7.1
 
 cache:
   directories:
@@ -21,7 +21,8 @@ env:
 
 script:
   - composer update $COMPOSER_PREFER
-  - "[[ \"$TRAVIS_PHP_VERSION\" != '5.3' && \"$TRAVIS_PHP_VERSION\" != '5.4' ]] && composer require --dev 'atoum/reports-extension:^2.0.1' || true"
+  - "[[ \"$TRAVIS_PHP_VERSION\" == '7.1' ]] && composer require 'atoum/atoum:dev-3.0.x-dev' || true"
+  - "[[ \"$TRAVIS_PHP_VERSION\" != '5.3' && \"$TRAVIS_PHP_VERSION\" != '5.4' && \"$TRAVIS_PHP_VERSION\" != '7.1' ]] && composer require --dev 'atoum/reports-extension:^2.0.1' || true"
   - bin/atoum -ncc
 
 notifications:
