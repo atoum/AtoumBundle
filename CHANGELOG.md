@@ -1,3 +1,8 @@
+1.6.0
+=====
+
+* [#107](https://github.com/atoum/AtoumBundle/pull/107) Add debug option ([@jdecool])
+
 1.5.0
 ===========
 
@@ -59,3 +64,4 @@
 [@lolautruche]: https://github.com/lolautruche
 [@gpaton]: https://github.com/gpaton
 [@maxailloud]: https://github.com/maxailloud
+[@jdecool]: https://github.com/jdecool
