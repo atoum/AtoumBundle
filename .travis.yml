@@ -19,6 +19,11 @@ env:
     - COMPOSER_PREFER="--prefer-stable"
     - COMPOSER_PREFER="--prefer-lowest"
 
+matrix:
+  exclude:
+    - php: 7.1
+      env: COMPOSER_PREFER="--prefer-lowest"
+
 script:
   - composer update $COMPOSER_PREFER
   - "[[ \"$TRAVIS_PHP_VERSION\" == '7.1' ]] && composer require 'atoum/atoum:dev-3.0.x-dev' || true"
