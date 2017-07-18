@@ -6,7 +6,7 @@ use mageekguy\atoum;
 use mageekguy\atoum\asserter;
 use mageekguy\atoum\asserters;
 
-class Crawler extends asserters\object
+class Crawler extends asserters\phpObject
 {
     /**
      * @param mixed $value

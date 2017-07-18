@@ -5,7 +5,7 @@ namespace atoum\AtoumBundle\Test\Asserters;
 use mageekguy\atoum;
 use mageekguy\atoum\asserters;
 
-class Response extends asserters\object
+class Response extends asserters\phpObject
 {
     /**
      * @param mixed $value
