@@ -9,7 +9,7 @@ class Response extends atoum\test
 {
     public function testClass()
     {
-        $this->testedClass->isSubclassOf('\\mageekguy\\atoum\\asserters\\object');
+        $this->testedClass->isSubclassOf('\\mageekguy\\atoum\\asserters\\phpObject');
     }
 
     public function test__construct()
