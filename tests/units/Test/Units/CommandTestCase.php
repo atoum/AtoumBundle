@@ -16,13 +16,13 @@ class CommandTestCase extends atoum\test
         $this
             ->given(
                 $command = new \mock\Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand($commandName = uniqid()),
-                $kernel      = new \mock\Symfony\Component\HttpKernel\KernelInterface(),
-                $container   = new \mock\Symfony\Component\DependencyInjection\ContainerInterface(),
-                $application = new \mock\Symfony\Bundle\FrameworkBundle\Console\Application($kernel),
-                $object = new \mock\atoum\AtoumBundle\Test\Units\CommandTestCase(),
                 $command->getMockController()->run = $status = uniqid(),
+                $container   = new \mock\Symfony\Component\DependencyInjection\ContainerInterface(),
+                $kernel      = new \mock\Symfony\Component\HttpKernel\KernelInterface(),
                 $kernel->getMockController()->getBundles = array(),
                 $kernel->getMockController()->getContainer = $container,
+                $application = new \mock\Symfony\Bundle\FrameworkBundle\Console\Application($kernel),
+                $object = new \mock\atoum\AtoumBundle\Test\Units\CommandTestCase(),
                 $object->getMockController()->getKernel = $kernel
             )
             ->if($commandTester = $object->createCommandTester($command))
