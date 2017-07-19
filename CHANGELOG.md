@@ -1,3 +1,10 @@
+1.6.1 - 2017-07-19
+=====
+
+## Bugfix
+
+* [#110](https://github.com/atoum/AtoumBundle/pull/110) Rename reserved "object" to "phpObject" ([@NiniGeek])
+
 1.6.0
 =====
 
@@ -65,3 +72,4 @@
 [@gpaton]: https://github.com/gpaton
 [@maxailloud]: https://github.com/maxailloud
 [@jdecool]: https://github.com/jdecool
+[@NiniGeek]: https://github.com/NiniGeek
