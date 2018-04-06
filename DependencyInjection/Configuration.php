@@ -29,6 +29,9 @@ class Configuration implements ConfigurationInterface
                         ->useAttributeAsKey('name')
                         ->prototype('array')
                             ->children()
+                                ->booleanNode('is_bundle')
+                                    ->defaultTrue()
+                                ->end()
                                 ->arrayNode('directories')
                                     ->defaultValue(array(
                                         'Tests/Units', 'Tests/Controller',
