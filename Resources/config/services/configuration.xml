@@ -10,7 +10,10 @@
     </parameters>
 
     <services>
-        <service id="atoum.configuration.bundle.container" class="%atoum.configuration.bundle.container.class%">
+        <service id="atoum.configuration.bundle.container" class="%atoum.configuration.bundle.container.class%" public="true" />
+
+        <service id="atoum.command" class="atoum\AtoumBundle\Command\AtoumCommand">
+            <tag name="console.command" command="atoum" />
         </service>
     </services>
 </container>

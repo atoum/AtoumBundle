@@ -26,11 +26,11 @@ class BundleDirectoriesResolverPass implements CompilerPassInterface
         $configuration   = $container->getParameterBag()->resolveValue($container->getParameter('atoum.bundles'));
 
         foreach ($configuration as $bundleName => $data) {
-            if (!isset($bundles[$bundleName])) {
+            if ($data['is_bundle'] && !isset($bundles[$bundleName])) {
                 throw new \LogicException(sprintf('Bundle "%s" does not exists.', $bundleName));
             }
 
-            $rc        = new \ReflectionClass($bundles[$bundleName]);
+            $rc        = new \ReflectionClass($data['is_bundle'] ? $bundles[$bundleName] : 'App\Kernel');
             $directory = dirname($rc->getFileName());
 
             $directories = array_map(
