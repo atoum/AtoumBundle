@@ -16,30 +16,49 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "symfony/framework-bundle": ">=2.3.0|^3.0",
-        "symfony/console": ">=2.3.0|^3.0",
-        "symfony/finder": ">=2.3.0|^3.0",
-        "symfony/dom-crawler": ">=2.3.0|^3.0",
-        "symfony/css-selector": ">=2.3.0|^3.0",
-        "atoum/atoum": "^3.1.1",
-        "fzaninotto/faker": "1.*"
+        "php": ">=8.1",
+        "symfony/framework-bundle": ">=7",
+        "symfony/console": ">=7",
+        "symfony/finder": ">=7",
+        "symfony/dom-crawler": ">=7",
+        "symfony/css-selector": ">=7",
+        "atoum/atoum": "^4.4.1",
+        "fakerphp/faker": "^1.23",
+        "ext-dom": "*"
     },
     "require-dev": {
-        "symfony/form": "2.*"
+        "symfony/form": "7.*",
+        "phpstan/phpstan": "^1.12",
+        "phpstan/phpstan-symfony": "^1.4",
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "rector/rector": "^1.2",
+        "atoum/stubs": "^2.6"
     },
     "autoload": {
-        "psr-0": {
-            "atoum\\AtoumBundle": ""
+        "psr-4": {
+            "atoum\\AtoumBundle\\": "",
+            "atoum\\AtoumBundle\\PHPStan\\": "phpstan/"
         }
     },
-    "target-dir": "atoum/AtoumBundle",
     "config": {
         "bin-dir": "bin"
+    },
+    "scripts": {
+        "test": "php bin/atoum",
+        "test-coverage": "php bin/atoum --enable-branch-and-path-coverage",
+        "test-coverage-html": "php bin/atoum --enable-branch-and-path-coverage --coverage-html coverage",
+        "test-no-coverage": "php bin/atoum --no-code-coverage",
+        "phpstan": "phpstan analyse --memory-limit=1G",
+        "cs-check": "php-cs-fixer fix --dry-run --diff",
+        "cs-fix": "php-cs-fixer fix"
     },
     "extra": {
         "branch-alias": {
             "dev-master": "1.5-dev"
+        },
+        "symfony": {
+            "allow-contrib": true,
+            "require": ">=7"
         }
     }
 }

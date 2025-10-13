@@ -2,30 +2,29 @@
 
 namespace atoum\AtoumBundle\Test\Units;
 
+use atoum\atoum;
 use Faker;
-use mageekguy\atoum;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * @property \Faker\Generator $faker
+ * @property Faker\Generator $faker
+ *
  * @method \Faker\Generator faker($locale = 'en_US')
  */
 abstract class Test extends atoum\test
 {
-    /** @var $string */
+    /** @var string|null */
     protected $class;
 
-    /** @var \Symfony\Component\HttpKernel\HttpKernelInterface */
+    /** @var KernelInterface|null */
     protected $kernel;
 
-    /** @var boolean */
+    /** @var bool */
     protected $kernelReset = true;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(atoum\adapter $adapter = null, atoum\annotations\extractor $annotationExtractor = null, atoum\asserter\generator $asserterGenerator = null, atoum\test\assertion\manager $assertionManager = null, \closure $reflectionClassFactory = null)
+    public function __construct(?atoum\adapter $adapter = null, ?atoum\annotations\extractor $annotationExtractor = null, ?atoum\asserter\generator $asserterGenerator = null, ?atoum\test\assertion\manager $assertionManager = null, ?\Closure $reflectionClassFactory = null)
     {
         parent::__construct($adapter, $annotationExtractor, $asserterGenerator, $assertionManager, $reflectionClassFactory);
 
@@ -33,11 +32,9 @@ abstract class Test extends atoum\test
     }
 
     /**
-     * @param atoum\test\assertion\manager $assertionManager
-     *
      * @return $this
      */
-    public function setAssertionManager(atoum\test\assertion\manager $assertionManager = null)
+    public function setAssertionManager(?atoum\test\assertion\manager $assertionManager = null)
     {
         $self = $this;
 
@@ -54,8 +51,6 @@ abstract class Test extends atoum\test
     }
 
     /**
-     * @param atoum\annotations\extractor $extractor
-     *
      * @return $this|void
      */
     protected function setClassAnnotations(atoum\annotations\extractor $extractor)
@@ -88,19 +83,20 @@ abstract class Test extends atoum\test
      *  * environment
      *  * debug
      *
-     * @param array $options An array of options
+     * @param array<string, mixed> $options An array of options
      *
-     * @return HttpKernelInterface A HttpKernelInterface instance
+     * @return KernelInterface A KernelInterface instance
      */
-    protected function createKernel(array $options = array())
+    protected function createKernel(array $options = []): KernelInterface
     {
         if (null === $this->class) {
             $this->class = $this->getKernelClass();
         }
 
+        /** @var KernelInterface */
         return new $this->class(
-            isset($options['environment']) ? $options['environment'] : 'test',
-            isset($options['debug']) ? $options['debug'] : true
+            $options['environment'] ?? 'test',
+            $options['debug'] ?? true,
         );
     }
 
@@ -109,9 +105,9 @@ abstract class Test extends atoum\test
      *
      * When the Kernel is located, the file is required.
      *
-     * @throws \RuntimeException
-     *
      * @return string The Kernel class name
+     *
+     * @throws \RuntimeException
      */
     protected function getKernelClass()
     {
@@ -133,7 +129,7 @@ abstract class Test extends atoum\test
     }
 
     /**
-     * Override this method if needed
+     * Override this method if needed.
      *
      * @return string
      */
@@ -148,13 +144,13 @@ abstract class Test extends atoum\test
     }
 
     /**
-     * return Kernel
+     * return Kernel.
      *
-     * @return Object HttpKernelInterface
+     * @return KernelInterface
      */
-    public function getKernel()
+    public function getKernel(): KernelInterface
     {
-        if(null === $this->kernel) {
+        if (null === $this->kernel) {
             $this->kernel = $this->createKernel();
         }
 
@@ -164,13 +160,13 @@ abstract class Test extends atoum\test
     /**
      * Enable or disable kernel reseting on client creation.
      *
-     * @param boolean $kernelReset
+     * @param bool $kernelReset
      *
-     * @return WebTestCase
+     * @return static
      */
     public function enableKernelReset($kernelReset)
     {
-        $this->kernelReset = (boolean) $kernelReset;
+        $this->kernelReset = (bool) $kernelReset;
 
         return $this;
     }

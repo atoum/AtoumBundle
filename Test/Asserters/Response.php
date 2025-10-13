@@ -2,23 +2,21 @@
 
 namespace atoum\AtoumBundle\Test\Asserters;
 
-use mageekguy\atoum;
-use mageekguy\atoum\asserters;
+use atoum\atoum\asserters;
 
 class Response extends asserters\phpObject
 {
     /**
-     * @param mixed $value
-     * @param bool  $checkType
+     * @param bool $checkType
      *
      * @return $this
      */
-    public function setWith($value, $checkType = true)
+    public function setWith(mixed $value, $checkType = true)
     {
         parent::setWith($value, false);
 
-        if ($checkType === true) {
-            if (self::isResponse($this->value) === false) {
+        if (true === $checkType) {
+            if (false === self::isResponse($this->value)) {
                 $this->fail(sprintf($this->getLocale()->_('%s is not a response'), $this->getTypeOf($this->value)));
             } else {
                 $this->pass();
@@ -37,7 +35,7 @@ class Response extends asserters\phpObject
     public function hasStatus($status, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getStatusCode()) !== $status) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Status %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($status)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Status %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($status)));
         } else {
             $this->pass();
         }
@@ -54,7 +52,7 @@ class Response extends asserters\phpObject
     public function hasAge($age, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getAge()) !== $age) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Age %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($age)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Age %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($age)));
         } else {
             $this->pass();
         }
@@ -71,7 +69,7 @@ class Response extends asserters\phpObject
     public function hasMaxAge($age, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getMaxAge()) !== $age) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Max age %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($age)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Max age %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($age)));
         } else {
             $this->pass();
         }
@@ -88,7 +86,7 @@ class Response extends asserters\phpObject
     public function hasCharset($charset, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getCharset()) !== $charset) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Charset %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($charset)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Charset %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($charset)));
         } else {
             $this->pass();
         }
@@ -105,7 +103,7 @@ class Response extends asserters\phpObject
     public function hasContent($content, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getContent()) !== $content) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Content %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($content)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Content %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($content)));
         } else {
             $this->pass();
         }
@@ -122,7 +120,7 @@ class Response extends asserters\phpObject
     public function hasEtag($etag, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getEtag()) !== $etag) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Etag %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($etag)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Etag %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($etag)));
         } else {
             $this->pass();
         }
@@ -139,7 +137,7 @@ class Response extends asserters\phpObject
     public function hasVersion($version, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getProtocolVersion()) !== $version) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Version %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($version)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Version %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($version)));
         } else {
             $this->pass();
         }
@@ -156,7 +154,7 @@ class Response extends asserters\phpObject
     public function hasTtl($ttl, $failMessage = null)
     {
         if (($actual = $this->valueIsSet()->value->getTtl()) !== $ttl) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('TTL %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($ttl)));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('TTL %s is not equal to %s'), $this->getTypeOf($actual), $this->getTypeOf($ttl)));
         } else {
             $this->pass();
         }
@@ -174,7 +172,7 @@ class Response extends asserters\phpObject
     public function hasHeader($name, $value, $failMessage = null)
     {
         if (($actual = $this->getHeaders()->get($name)) !== $value) {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_('Value %s is not equal to %s for header %s'), $this->getTypeOf($actual), $this->getTypeOf($value), $name));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_('Value %s is not equal to %s for header %s'), $this->getTypeOf($actual), $this->getTypeOf($value), $name));
         } else {
             $this->pass();
         }
@@ -191,13 +189,11 @@ class Response extends asserters\phpObject
     }
 
     /**
-     * @param mixed $value
-     *
      * @return bool
      */
-    protected static function isResponse($value)
+    protected static function isResponse(mixed $value)
     {
-        return ($value instanceof \Symfony\Component\HttpFoundation\Response);
+        return $value instanceof \Symfony\Component\HttpFoundation\Response;
     }
 
     /**
@@ -205,6 +201,8 @@ class Response extends asserters\phpObject
      */
     public function dumpResponse()
     {
+        // Note: dump() method might be from parent asserter or atoum
+        /* @phpstan-ignore-next-line */
         $this->dump($this->getValue()->getContent());
 
         return $this;
@@ -221,7 +219,7 @@ class Response extends asserters\phpObject
         if (false !== strpos($this->getValue()->getContent(), $text)) {
             $this->pass();
         } else {
-            $this->fail($failMessage !== null ? $failMessage : sprintf($this->getLocale()->_("text : '%s' wasn't found in the response"), $text));
+            $this->fail(null !== $failMessage ? $failMessage : sprintf($this->getLocale()->_("text : '%s' wasn't found in the response"), $text));
         }
 
         return $this;

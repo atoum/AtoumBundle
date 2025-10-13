@@ -2,36 +2,29 @@
 
 namespace atoum\AtoumBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use atoum\AtoumBundle\DependencyInjection\AtoumAtoumExtension;
+use atoum\AtoumBundle\DependencyInjection\AtoumExtension;
 use atoum\AtoumBundle\DependencyInjection\Compiler\BundleDirectoriesResolverPass;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
- * AtoumAtoumBundle
+ * AtoumAtoumBundle.
  *
- * @uses Bundle
  * @author Stephane PY <py.stephane1@gmail.com>
  */
 class AtoumAtoumBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
         $container->addCompilerPass(new BundleDirectoriesResolverPass());
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainerExtension()
+    public function getContainerExtension(): AtoumExtension
     {
         if (null === $this->extension) {
-            $this->extension = new AtoumAtoumExtension;
+            $this->extension = new AtoumExtension();
         }
 
         return $this->extension;

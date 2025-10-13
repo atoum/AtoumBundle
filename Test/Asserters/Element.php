@@ -2,45 +2,27 @@
 
 namespace atoum\AtoumBundle\Test\Asserters;
 
+use atoum\atoum;
+use atoum\atoum\asserter;
+use atoum\atoum\tools;
 use atoum\AtoumBundle\DomCrawler\DOMNode;
-use mageekguy\atoum;
-use mageekguy\atoum\tools;
-use mageekguy\atoum\asserter;
-use mageekguy\atoum\asserters;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class Element extends Crawler
 {
-    /** @var \atoum\AtoumBundle\Test\Asserters\Crawler  */
-    private $parent;
-
-    /** @var string */
-    private $selector;
-
-    /** @var string */
-    private $content;
-
-    /** @var string[] */
-    private $attributes = array();
-
-    /** @var int */
-    private $exactly;
-
-    /** @var int */
-    private $atLeast;
-
-    /** @var int */
-    private $atMost;
-
-    /** @var int */
-    private $childCount;
-
+    private ?Crawler $parent = null;
+    private ?string $selector = null;
+    private ?string $content = null;
     /**
-     * @param asserter\generator      $generator
-     * @param tools\variable\analyzer $analyzer
-     * @param atoum\locale            $locale
+     * @var array<string, string>
      */
-    public function __construct(asserter\generator $generator = null, tools\variable\analyzer $analyzer = null, atoum\locale $locale = null)
+    private array $attributes = [];
+    private ?int $exactly = null;
+    private ?int $atLeast = null;
+    private ?int $atMost = null;
+    private ?int $childCount = null;
+
+    public function __construct(?asserter\generator $generator = null, ?tools\variable\analyzer $analyzer = null, ?atoum\locale $locale = null)
     {
         parent::__construct($generator, $analyzer, $locale);
 
@@ -48,11 +30,9 @@ class Element extends Crawler
     }
 
     /**
-     * @param Crawler $parent
-     *
      * @return $this
      */
-    public function setParent(Crawler $parent = null)
+    public function setParent(?Crawler $parent = null)
     {
         $this->parent = $parent;
 
@@ -60,9 +40,9 @@ class Element extends Crawler
     }
 
     /**
-     * @return Crawler
+     * @return Crawler|null
      */
-    public function getParent()
+    public function getParent(): ?Crawler
     {
         return $this->parent;
     }
@@ -93,8 +73,8 @@ class Element extends Crawler
             $nodes = $this->reduce(
                 $nodes,
                 function (DOMNode $node) use ($content) {
-                    return ($node->text() == $content);
-                }
+                    return $node->text() == $content;
+                },
             );
         }
 
@@ -107,6 +87,10 @@ class Element extends Crawler
         }
 
         $this->assertCount($nodes, $failMessage);
+
+        if (null === $this->parent) {
+            throw new \LogicException('Parent crawler is not set.');
+        }
 
         return $this->parent;
     }
@@ -145,9 +129,9 @@ class Element extends Crawler
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
@@ -160,8 +144,8 @@ class Element extends Crawler
         $nodes = $this->reduce(
             $this->valueIsSet()->value,
             function (DOMNode $node) {
-                return ($node->text() != '');
-            }
+                return '' != $node->text();
+            },
         );
 
         $this->assertCount($nodes, $this->getLocale()->_('Expected any content, found an empty value.'));
@@ -170,9 +154,6 @@ class Element extends Crawler
     }
 
     /**
-     * @param DomCrawler $nodes
-     * @param callable   $closure
-     *
      * @return DomCrawler
      */
     protected function reduce(DomCrawler $nodes, \Closure $closure)
@@ -180,7 +161,7 @@ class Element extends Crawler
         return $nodes->reduce(
             function ($node) use ($closure) {
                 return $closure(new DOMNode($node));
-            }
+            },
         );
     }
 
@@ -198,16 +179,14 @@ class Element extends Crawler
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
 
     /**
-     * @param DomCrawler $nodes
-     *
      * @return DomCrawler
      */
     protected function filterAttributes(DomCrawler $nodes)
@@ -224,7 +203,7 @@ class Element extends Crawler
                 }
 
                 return true;
-            }
+            },
         );
     }
 
@@ -275,8 +254,6 @@ class Element extends Crawler
     }
 
     /**
-     * @param DomCrawler $nodes
-     *
      * @return DomCrawler
      */
     protected function filterChild(DomCrawler $nodes)
@@ -290,31 +267,30 @@ class Element extends Crawler
 
                 foreach ($node->children() as $child) {
                     if (false === $child instanceof \DOMText) {
-                        $nodes++;
+                        ++$nodes;
                     }
                 }
 
                 return $nodes === $count;
-            }
+            },
         );
     }
 
     /**
-     * @param DomCrawler  $value
      * @param string|null $failMessage
      *
      * @return $this
      */
     protected function assertCount(DomCrawler $value, $failMessage = null)
     {
-        if ($this->exactly !== null) {
+        if (null !== $this->exactly) {
             $this->assertExactly($value, $failMessage);
         } else {
-            if ($this->atLeast !== null) {
+            if (null !== $this->atLeast) {
                 $this->assertAtLeast($value, $failMessage);
             }
 
-            if ($this->atMost !== null) {
+            if (null !== $this->atMost) {
                 $this->assertAtMost($value, $failMessage);
             }
         }
@@ -337,15 +313,14 @@ class Element extends Crawler
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getExactly()
+    public function getExactly(): ?int
     {
         return $this->exactly;
     }
 
     /**
-     * @param DomCrawler  $value
      * @param string|null $failMessage
      *
      * @return $this
@@ -354,12 +329,12 @@ class Element extends Crawler
     {
         if (count($value) !== $this->exactly) {
             $this->fail(
-                $failMessage !== null ? $failMessage : sprintf(
+                null !== $failMessage ? $failMessage : sprintf(
                     $this->getLocale()->_('Expected %d element(s) matching %s, found %d.'),
                     $this->exactly,
                     $this->getPattern(),
-                    count($value)
-                )
+                    count($value),
+                ),
             );
         } else {
             $this->pass();
@@ -382,15 +357,14 @@ class Element extends Crawler
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getAtLeast()
+    public function getAtLeast(): ?int
     {
         return $this->atLeast;
     }
 
     /**
-     * @param DomCrawler  $value
      * @param string|null $failMessage
      *
      * @return $this
@@ -401,12 +375,12 @@ class Element extends Crawler
             $this->pass();
         } else {
             $this->fail(
-                $failMessage !== null ? $failMessage : sprintf(
+                null !== $failMessage ? $failMessage : sprintf(
                     $this->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'),
                     $this->atLeast,
                     $this->getPattern(),
-                    count($value)
-                )
+                    count($value),
+                ),
             );
         }
 
@@ -427,15 +401,14 @@ class Element extends Crawler
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getAtMost()
+    public function getAtMost(): ?int
     {
         return $this->atMost;
     }
 
     /**
-     * @param DomCrawler  $value
      * @param string|null $failMessage
      *
      * @return $this
@@ -446,12 +419,12 @@ class Element extends Crawler
             $this->pass();
         } else {
             $this->fail(
-                $failMessage !== null ? $failMessage : sprintf(
+                null !== $failMessage ? $failMessage : sprintf(
                     $this->getLocale()->_('Expected at most %d element(s) matching %s, found %d.'),
                     $this->atMost,
                     $this->getPattern(),
-                    count($value)
-                )
+                    count($value),
+                ),
             );
         }
 
@@ -465,14 +438,14 @@ class Element extends Crawler
     {
         $attributes = '';
         foreach ($this->attributes as $name => $val) {
-            $attributes .= '[' . $name . '="' . $val . '"]';
+            $attributes .= '['.$name.'="'.$val.'"]';
         }
 
         return sprintf(
             $this->getLocale()->_('%s%s%s'),
             $this->selector ?: '*',
             $attributes,
-            $this->getContent() ? '[@content="' . $this->getContent() . '"]' : ''
+            $this->getContent() ? '[@content="'.$this->getContent().'"]' : '',
         );
     }
 }

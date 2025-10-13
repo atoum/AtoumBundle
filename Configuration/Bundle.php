@@ -3,44 +3,37 @@
 namespace atoum\AtoumBundle\Configuration;
 
 /**
- * Bundle
+ * Bundle.
  *
  * @author Stephane PY <py.stephane1@gmail.com>
  */
 class Bundle
 {
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
     /**
-     * @var array
+     * @var array<string>
      */
-    protected $directories = array();
+    protected array $directories = [];
 
     /**
-     * @param string $name        name
-     * @param array  $directories directories
+     * @param array<string> $directories
      */
-    public function __construct($name, array $directories)
+    public function __construct(string $name, array $directories)
     {
-        $this->name        = $name;
+        $this->name = $name;
         $this->directories = $directories;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @return array
+     * @return array<string>
      */
-    public function getDirectories()
+    public function getDirectories(): array
     {
         return $this->directories;
     }
