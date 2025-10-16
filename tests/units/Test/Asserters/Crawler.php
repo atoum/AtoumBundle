@@ -1,15 +1,16 @@
 <?php
+
 namespace atoum\AtoumBundle\tests\units\Test\Asserters;
 
-use mageekguy\atoum;
-use mageekguy\atoum\asserter;
+use atoum\atoum;
+use atoum\atoum\asserter;
 use atoum\AtoumBundle\Test\Asserters\Crawler as TestedClass;
 
 class Crawler extends atoum\test
 {
     public function testClass()
     {
-        $this->testedClass->isSubclassOf('\\mageekguy\\atoum\\asserters\\phpObject');
+        $this->testedClass->isSubclassOf('\\atoum\\atoum\\asserters\\phpObject');
     }
 
     public function test__construct()
@@ -40,14 +41,14 @@ class Crawler extends atoum\test
                 ->exception(function () use ($object, $value) {
                     $object->setWith($value);
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('%s is not an object'), $object->getAnalyzer()->getTypeOf($value)))
-            ->if($value = new \StdClass())
+            ->if($value = new \stdClass())
             ->then
                 ->exception(function () use ($object, $value) {
                     $object->setWith($value);
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('%s is not a crawler'), $object->getAnalyzer()->getTypeOf($value)))
             ->if($crawler = new \mock\Symfony\Component\DomCrawler\Crawler())
             ->then

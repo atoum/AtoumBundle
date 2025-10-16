@@ -1,0 +1,10 @@
+# For Symfony 3, use config_test.yml instead of this file
+
+# Configure your bundles to test:
+#atoum_atoum:
+#    bundles:
+#        YourVendor\YourBundle:
+#            directories:
+#                - Tests/Units
+#                - Tests/Controller
+#                - Tests/Functional

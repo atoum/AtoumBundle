@@ -2,20 +2,16 @@
 
 namespace atoum\AtoumBundle\Test\Units;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class CommandTestCase extends Test
 {
     /**
-     * Create a CommandTester instance to test commands
-     *
-     * @param ContainerAwareCommand $command
-     *
-     * @return CommandTester
+     * Create a CommandTester instance to test commands.
      */
-    public function createCommandTester(ContainerAwareCommand $command)
+    public function createCommandTester(Command $command): CommandTester
     {
         // Create Kernel
         $kernel = $this->getKernel();
@@ -25,12 +21,17 @@ class CommandTestCase extends Test
         $application = new Application($kernel);
         $application->add($command);
 
+        // Get command name with fallback
+        $commandName = $command->getName();
+        if (null === $commandName) {
+            throw new \LogicException('Command name cannot be null.');
+        }
+
         // Create command tester for the given command
         $commandTester = new CommandTester(
-            $application->find($command->getName())
+            $application->find($commandName),
         );
 
         return $commandTester;
     }
 }
-

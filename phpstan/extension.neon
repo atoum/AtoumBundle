@@ -1,0 +1,6 @@
+services:
+    -
+        class: atoum\AtoumBundle\PHPStan\AtoumDynamicReturnTypeExtension
+        tags:
+            - phpstan.broker.dynamicMethodReturnTypeExtension
+

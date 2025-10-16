@@ -2,26 +2,22 @@
 
 namespace atoum\AtoumBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * AtoumAtoumExtension
+ * AtoumExtension.
  *
- * @uses Extension
  * @author Stephane PY <py.stephane1@gmail.com>
  */
-class AtoumAtoumExtension extends Extension
+class AtoumExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
-        $processor     = new Processor();
+        $processor = new Processor();
         $configuration = new Configuration();
 
         $config = $processor->processConfiguration($configuration, $configs);
@@ -32,10 +28,7 @@ class AtoumAtoumExtension extends Extension
         $container->setParameter('atoum.bundles', $config['bundles']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'atoum';
     }

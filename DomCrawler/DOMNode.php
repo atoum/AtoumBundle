@@ -1,62 +1,44 @@
 <?php
+
 namespace atoum\AtoumBundle\DomCrawler;
 
 use Symfony\Component\DomCrawler;
 
 class DOMNode
 {
-    /**
-     * @var \DOMNode|\Symfony\Component\DomCrawler\Crawler
-     */
-    protected $node;
+    protected \DOMNode|DomCrawler\Crawler $node;
 
-    /**
-     * @param \DOMNode|\Symfony\Component\DomCrawler\Crawler $node
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function __construct($node)
+    public function __construct(\DOMNode|DomCrawler\Crawler $node)
     {
-        if (($node instanceof DomCrawler\Crawler || $node instanceof \DOMNode) === false) {
-            throw new \InvalidArgumentException('Node should be an instance of either \\DOMNode or \\Symfony\\Component\\DomCrawler\\Crawler, got ' . get_class($node));
-        }
-
         $this->node = $node;
     }
 
-    /**
-     * @return \DOMNode|\Symfony\Component\DomCrawler\Crawler
-     */
-    public function getNode()
+    public function getNode(): \DOMNode|DomCrawler\Crawler
     {
         return $this->node;
     }
 
-    /**
-     * @return string
-     */
-    public function text()
+    public function text(): string
     {
         $node = $this->getNode();
 
-        return $node instanceof \DOMNode ? $node->nodeValue : $node->text();
+        if ($node instanceof \DOMNode) {
+            return $node->nodeValue ?? '';
+        }
+        
+        return $node->text();
     }
 
-    /**
-     * @param string $attribute
-     *
-     * @return null|string
-     */
-    public function attr($attribute)
+    public function attr(string $attribute): ?string
     {
         $node = $this->getNode();
         $value = null;
 
-        if ($node instanceof \DOMNode) {
+        if ($node instanceof \DOMElement) {
             $value = $node->getAttribute($attribute);
-        } else {
+        } elseif ($node instanceof DomCrawler\Crawler) {
             foreach ($node as $item) {
-                if ($item->hasAttribute($attribute)) {
+                if ($item instanceof \DOMElement && $item->hasAttribute($attribute)) {
                     $value = $node->attr($attribute);
                 }
 
@@ -67,10 +49,7 @@ class DOMNode
         return $value;
     }
 
-    /**
-     * @return \Symfony\Component\DomCrawler\Crawler
-     */
-    public function children()
+    public function children(): DomCrawler\Crawler
     {
         $node = $this->getNode();
 

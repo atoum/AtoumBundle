@@ -12,5 +12,13 @@
     <services>
         <service id="atoum.configuration.bundle.container" class="%atoum.configuration.bundle.container.class%">
         </service>
+
+        <service id="atoum\AtoumBundle\Configuration\BundleContainer" alias="atoum.configuration.bundle.container" />
+
+        <service id="atoum\AtoumBundle\Command\AtoumCommand">
+            <argument type="service" id="atoum.configuration.bundle.container" />
+            <argument type="service" id="kernel" />
+            <tag name="console.command" />
+        </service>
     </services>
 </container>

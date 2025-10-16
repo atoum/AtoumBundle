@@ -1,7 +1,8 @@
 <?php
+
 namespace atoum\AtoumBundle\tests\units\DomCrawler;
 
-use mageekguy\atoum;
+use atoum\atoum;
 use atoum\AtoumBundle\DomCrawler\Crawler;
 use atoum\AtoumBundle\DomCrawler\DOMNode as TestedClass;
 
@@ -10,13 +11,12 @@ class DOMNode extends atoum\test
     public function test__construct()
     {
         $this
-            ->if($node = new \StdClass)
+            ->if($node = new \stdClass())
             ->then
                 ->exception(function () use ($node) {
                     new TestedClass($node);
                 })
-                    ->isInstanceOf('\\InvalidArgumentException')
-                    ->hasMessage('Node should be an instance of either \\DOMNode or \\Symfony\\Component\\DomCrawler\\Crawler, got ' . get_class($node))
+                    ->isInstanceOf('\\TypeError')
             ->if($node = new \DOMElement(uniqid('_')))
             ->then
                 ->object($object = new TestedClass($node))
@@ -35,7 +35,7 @@ class DOMNode extends atoum\test
             ->and($object = new TestedClass($node))
             ->then
                 ->string($object->text())->isEqualTo($value)
-            ->if($crawler = new \Symfony\Component\DomCrawler\Crawler(array($node)))
+            ->if($crawler = new \Symfony\Component\DomCrawler\Crawler([$node]))
             ->and($object = new TestedClass($crawler))
             ->then
                 ->string($object->text())->isEqualTo($value)
@@ -50,7 +50,7 @@ class DOMNode extends atoum\test
             ->and($object = new TestedClass($node))
             ->then
                 ->string($object->attr(uniqid()))->isEmpty()
-            ->if($crawler = new \Symfony\Component\DomCrawler\Crawler(array($node)))
+            ->if($crawler = new \Symfony\Component\DomCrawler\Crawler([$node]))
             ->and($object = new TestedClass($crawler))
             ->then
                 ->variable($object->attr(uniqid()))->isNull()
@@ -58,7 +58,7 @@ class DOMNode extends atoum\test
             ->and($object = new TestedClass($node))
             ->then
                 ->string($object->attr($attr))->isEqualTo($value)
-            ->if($crawler = new \Symfony\Component\DomCrawler\Crawler(array($node)))
+            ->if($crawler = new \Symfony\Component\DomCrawler\Crawler([$node]))
             ->and($object = new TestedClass($crawler))
             ->then
                 ->string($object->attr($attr))->isEqualTo($value)
@@ -72,7 +72,7 @@ class DOMNode extends atoum\test
             ->if($node = $document->createElement(uniqid('_')))
             ->and($child = $document->createElement(uniqid('_')))
             ->and($node->appendChild($child))
-            ->and($crawler = new Crawler(array($node)))
+            ->and($crawler = new Crawler([$node]))
             ->and($object = new TestedClass($crawler))
             ->then
                 ->object($children = $object->children())->isInstanceOf('\\Symfony\\Component\\DomCrawler\\Crawler')

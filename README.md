@@ -3,37 +3,40 @@ AtoumBundle
 
 [![Build Status](https://secure.travis-ci.org/atoum/AtoumBundle.png)](http://travis-ci.org/atoum/AtoumBundle)
 
-This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the simple, modern and intuitive unit testing framework for PHP, from [mageekguy](https://github.com/mageekguy) into Symfony2.
+This bundle provides a (very) simple integration of [atoum](https://github.com/atoum/atoum), the simple, modern and intuitive unit testing framework for PHP, into Symfony.
+
+**Version 3.0+** requires **Symfony 7+** and **PHP 8.1+**.
 
 ## Installation
 
-## 1 - With composer
-
-```json
-{
-    "require": {
-        "atoum/atoum-bundle": "^1.4"
-    }
-}
-```
-
-In most of the cases you don't need AtoumBundle in your production environment.
+### With composer
 
 ```json
 {
     "require-dev": {
-        "atoum/atoum-bundle": "^1.4"
+        "atoum/atoum-bundle": "^3.0"
     }
 }
 ```
 
-## 2 - Command
+**Note:** For Symfony 6 and earlier versions, use `^2.0` instead.
+
+## Command
 
 AtoumBundle is provided with a Symfony command. You can launch atoum tests on specific bundles.
 
-### 2-a Registering in the kernel
+### Registering in the kernel
 
-You have to define AtoumBundle on `AppKernel`
+Add AtoumBundle to your `config/bundles.php` (Symfony 4+):
+
+```php
+return [
+    // ...
+    atoum\AtoumBundle\AtoumAtoumBundle::class => ['dev' => true, 'test' => true],
+];
+```
+
+For older Symfony versions, add to your `AppKernel.php`:
 
 ```php
 if (in_array($this->getEnvironment(), array('dev', 'test'))) {
@@ -42,9 +45,9 @@ if (in_array($this->getEnvironment(), array('dev', 'test'))) {
 }
 ```
 
-### 2-b Configuration
+### Configuration
 
-Define your bundles on configuration (if you want to use it only in test environment, in `config_test.yml` only):
+Define your bundles in `config/packages/test/atoum.yaml`:
 
 ```yaml
 atoum:
@@ -55,16 +58,29 @@ atoum:
             directories: [Tests/Units, Tests/Functional, ...]
 ```
 
-### 2-c Command-line usage
+For Symfony 3 and earlier, use `config_test.yml` instead.
 
-Then you can use:
+### Command-line usage
+
+**Modern Symfony 7+ approach (recommended):**
 
 ```shell
-$ php app/console atoum FooBundle --env=test # launch tests of FooBundle
-$ php app/console atoum FooBundle BarBundle --env=test # launch tests of FooBundle and BarBundle
-$ php app/console atoum acme_foo --env=test # launch tests of bundle where alias is acme_foo
-$ php app/console atoum --env=test # launch tests from configuration.
+# Test any directory directly (no configuration needed!)
+$ php bin/console atoum --directory=src/Tests
+$ php bin/console atoum --directory=tests
+$ php bin/console atoum --directory=tests/Unit --directory=tests/Integration
 ```
+
+**Legacy bundle-based approach (still supported):**
+
+```shell
+$ php bin/console atoum FooBundle # launch tests of FooBundle
+$ php bin/console atoum FooBundle BarBundle # launch tests of FooBundle and BarBundle
+$ php bin/console atoum acme_foo # launch tests of bundle where alias is acme_foo
+$ php bin/console atoum # launch tests from configuration
+```
+
+**🎯 See [UPGRADE-3.0.md](UPGRADE-3.0.md) for complete migration guide and examples.**
 
 ## Simple Usage
 
@@ -82,7 +98,7 @@ namespace Acme\MyBundle\Tests\Units\Entity;
 //require __DIR__ . '/../../../../../../app/autoload.php';
 
 // use path of the atoum.phar as bellow if you don't want to use atoum via composer
-//require_once __DIR__ . '/../../../../../vendor/mageekguy.atoum.phar';
+//require_once __DIR__ . '/../../../../../vendor/atoum.phar';
 
 use atoum\AtoumBundle\Test\Units;
 
@@ -121,7 +137,7 @@ You can also easily test a command:
 namespace My\Bundle\FoobarBundle\Tests\Units\Command;
 
 use atoum\AtoumBundle\Test\Units as AtoumBundle;
-use mageekguy\atoum;
+use atoum\atoum;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -256,7 +272,7 @@ class TestEntityType extends Form\FormTestCase{
 
 ## Faker data
 
-AtoumBundle integrates with [Faker](https://github.com/fzaninotto/Faker) library.
+AtoumBundle integrates with [Faker](https://github.com/FakerPHP/Faker) library.
 
 In your tests classes, you have access to a ```Faker\Generator``` instance with the ```faker``` asserter.
 
@@ -271,4 +287,4 @@ public function testMyAmazingFeature()
 }
 ```
 
-See [Faker's documentation](https://github.com/fzaninotto/Faker#basic-usage) about its usage.
+See [Faker's documentation](https://fakerphp.github.io/) about its usage.

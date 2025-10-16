@@ -2,24 +2,21 @@
 
 namespace atoum\AtoumBundle\Test\Asserters;
 
-use mageekguy\atoum;
-use mageekguy\atoum\asserter;
-use mageekguy\atoum\asserters;
+use atoum\atoum\asserters;
 
 class Crawler extends asserters\phpObject
 {
     /**
-     * @param mixed $value
-     * @param bool  $checkType
+     * @param bool $checkType
      *
      * @return $this
      */
-    public function setWith($value, $checkType = true)
+    public function setWith(mixed $value, $checkType = true)
     {
         parent::setWith($value, $checkType);
 
-        if ($checkType === true) {
-            if (self::isCrawler($this->value) === false) {
+        if (true === $checkType) {
+            if (false === self::isCrawler($this->value)) {
                 $this->fail(sprintf($this->getLocale()->_('%s is not a crawler'), $this));
             } else {
                 $this->pass();
@@ -31,10 +28,8 @@ class Crawler extends asserters\phpObject
 
     /**
      * @param string $element
-     *
-     * @return $this
      */
-    public function hasElement($element)
+    public function hasElement($element): Element
     {
         $asserter = new Element($this->getGenerator(), $this->getAnalyzer(), $this->getLocale());
 
@@ -45,12 +40,10 @@ class Crawler extends asserters\phpObject
     }
 
     /**
-     * @param mixed $value
-     *
      * @return bool
      */
-    protected static function isCrawler($value)
+    protected static function isCrawler(mixed $value)
     {
-        return ($value instanceof \Symfony\Component\DomCrawler\Crawler);
+        return $value instanceof \Symfony\Component\DomCrawler\Crawler;
     }
 }

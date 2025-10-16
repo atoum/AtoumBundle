@@ -1,3 +1,32 @@
+3.0.0 - 2025-10-14
+=====
+
+## Breaking Changes
+
+* Symfony 7+ compatibility - Minimum PHP version: 8.1
+* Migrated from PSR-0 to PSR-4 autoloading
+* `ContainerAwareCommand` replaced with `Command` using dependency injection
+* `Client` replaced with `KernelBrowser` in WebTestCase
+* Commands now use constructor injection instead of container access
+* `getRootDir()` replaced with `getProjectDir()`
+* Return type declarations added to all methods
+* Modern PHP 8+ syntax (typed properties, union types, etc.)
+
+## Improvements
+
+* **New:** `--directory` option for modern Symfony 7+ testing approach
+  - Test any directory directly without bundle configuration
+  - `bin/console atoum --directory=src/Tests`
+  - `bin/console atoum --directory=tests`
+  - Multiple directories supported: `--directory=tests/Unit --directory=tests/Integration`
+  - Full backward compatibility with bundle-based testing
+* Better type safety with full return type declarations
+* Service autowiring support
+* Console command attributes (`#[AsCommand]`) support
+* Modernized code following Symfony 7 best practices
+* PHPStan level 6 compliance (0 errors)
+* PHP-CS-Fixer and Rector integration for code quality
+
 2.0.0 - 2017-07-19
 =====
 

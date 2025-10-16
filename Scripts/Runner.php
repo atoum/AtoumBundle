@@ -2,16 +2,16 @@
 
 namespace atoum\AtoumBundle\Scripts;
 
-use mageekguy\atoum\scripts\runner as BaseRunner;
-use mageekguy\atoum\cli;
-use mageekguy\atoum\php;
+use atoum\atoum\scripts\runner as BaseRunner;
 
+/**
+ * @method bool runAgain() Check if the loop should run again (from parent class)
+ */
 class Runner extends BaseRunner
 {
-
-    protected function loop()
+    protected function loop(): self
     {
-        $php = new php();
+        $php = new \atoum\atoum\php();
 
         foreach ($_SERVER['argv'] as $arg) {
             switch ($arg) {
@@ -24,43 +24,42 @@ class Runner extends BaseRunner
             }
         }
 
-        if ($this->cli->isTerminal() === true) {
+        if (true === $this->cli->isTerminal()) {
             $php->addOption('--force-terminal');
         }
 
         $addScoreFile = false;
 
         foreach ($this->argumentsParser->getValues() as $argument => $values) {
-            switch ($argument)
-            {
+            switch ($argument) {
                 case '-sf':
                 case '--score-file':
                     $addScoreFile = true;
+
                     break;
             }
         }
 
-        if ($this->scoreFile === null) {
-            $this->scoreFile = sys_get_temp_dir() . '/atoum.score';
+        if (null === $this->scoreFile) {
+            $this->scoreFile = sys_get_temp_dir().'/atoum.score';
 
             @unlink($this->scoreFile);
 
             $addScoreFile = true;
         }
 
-        if ($addScoreFile === true) {
+        if (true === $addScoreFile) {
             $php->addOption(sprintf('--score-file=%s', $this->scoreFile));
         }
 
-        while ($this->canRun() === true) {
+        while (true === $this->canRun()) {
             passthru((string) $php);
 
-            if ($this->loop === false || $this->runAgain() === false) {
+            if (false === $this->loop || false === $this->runAgain()) {
                 $this->stopRun();
             }
         }
 
         return $this;
     }
-
 }

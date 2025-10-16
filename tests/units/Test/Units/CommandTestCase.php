@@ -2,7 +2,7 @@
 
 namespace atoum\AtoumBundle\tests\units\Test\Units;
 
-use mageekguy\atoum;
+use atoum\atoum;
 
 class CommandTestCase extends atoum\test
 {
@@ -15,21 +15,29 @@ class CommandTestCase extends atoum\test
     {
         $this
             ->given(
-                $command = new \mock\Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand($commandName = uniqid()),
-                $command->getMockController()->run = $status = uniqid(),
-                $container   = new \mock\Symfony\Component\DependencyInjection\ContainerInterface(),
-                $kernel      = new \mock\Symfony\Component\HttpKernel\KernelInterface(),
-                $kernel->getMockController()->getBundles = array(),
+                $command = new \mock\Symfony\Component\Console\Command\Command($commandName = uniqid()),
+                $command->getMockController()->run = $status = 0,
+                $container = new \mock\Symfony\Component\DependencyInjection\ContainerInterface(),
+                $container->getMockController()->has = false,
+                $container->getMockController()->hasParameter = false,
+                $container->getMockController()->get = null,
+                $container->getMockController()->has = false,
+                $container->getMockController()->hasParameter = false,
+                $container->getMockController()->get = null,
+                $kernel = new \mock\Symfony\Component\HttpKernel\KernelInterface(),
+                $kernel->getMockController()->getBundles = [],
                 $kernel->getMockController()->getContainer = $container,
+                $kernel->getMockController()->getEnvironment = 'test',
+                $kernel->getMockController()->isDebug = true,
                 $application = new \mock\Symfony\Bundle\FrameworkBundle\Console\Application($kernel),
                 $object = new \mock\atoum\AtoumBundle\Test\Units\CommandTestCase(),
-                $object->getMockController()->getKernel = $kernel
+                $object->getMockController()->getKernel = $kernel,
             )
             ->if($commandTester = $object->createCommandTester($command))
             ->then
                 ->object($commandTester)
                     ->isInstanceOf('\\Symfony\\Component\\Console\\Tester\\CommandTester')
-                ->variable($commandTester->execute(array()))
+                ->integer($commandTester->execute([]))
                     ->isEqualTo($status)
         ;
     }

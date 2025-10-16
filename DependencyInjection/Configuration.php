@@ -6,35 +6,27 @@ use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Configuration
+ * Configuration.
  *
- * @uses ConfigurationInterface
  * @author Stephane PY <py.stephane1@gmail.com>
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * Generates the configuration tree builder.
-     *
-     * @return TreeBuilder The tree builder
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
-        $tb = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('atoum_atoum');
 
-        return $tb
-            ->root('atoum_atoum')
-                ->children()
-                    ->arrayNode('bundles')
-                        ->useAttributeAsKey('name')
-                        ->prototype('array')
-                            ->children()
-                                ->arrayNode('directories')
-                                    ->defaultValue(array(
-                                        'Tests/Units', 'Tests/Controller',
-                                    ))
-                                    ->prototype('scalar')
-                                    ->end()
+        $treeBuilder->getRootNode()
+            ->children()
+                ->arrayNode('bundles')
+                    ->useAttributeAsKey('name')
+                    ->arrayPrototype()
+                        ->children()
+                            ->arrayNode('directories')
+                                ->defaultValue([
+                                    'Tests/Units', 'Tests/Controller',
+                                ])
+                                ->scalarPrototype()
                                 ->end()
                             ->end()
                         ->end()
@@ -42,5 +34,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
             ->end()
         ;
+
+        return $treeBuilder;
     }
 }

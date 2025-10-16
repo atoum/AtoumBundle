@@ -1,0 +1,25 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - phpstan/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - Command
+        - Configuration
+        - DependencyInjection
+        - DomCrawler
+        - Scripts
+        - Test
+    excludePaths:
+        - tests
+        - vendor
+        - phpstan  # Exclude PHPStan extensions from analysis
+    
+    symfony:
+        # container_xml_path: '%currentWorkingDirectory%/var/cache/dev/App_KernelDevDebugContainer.xml'
+        # console_application_loader: '%currentWorkingDirectory%/bin/console'
+    
+    # Bootstrap file to autoload PHPStan extensions
+    bootstrapFiles:
+        - phpstan/AtoumDynamicReturnTypeExtension.php

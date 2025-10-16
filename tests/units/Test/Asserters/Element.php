@@ -1,16 +1,17 @@
 <?php
+
 namespace atoum\AtoumBundle\tests\units\Test\Asserters;
 
+use atoum\atoum;
+use atoum\atoum\asserter;
 use atoum\AtoumBundle\Test\Asserters\Crawler as CrawlerAssert;
-use mageekguy\atoum;
-use mageekguy\atoum\asserter;
 use atoum\AtoumBundle\Test\Asserters\Element as TestedClass;
 
 class Element extends atoum\test
 {
     public function testClass()
     {
-        $this->testedClass->isSubclassOf('\\mageekguy\\atoum\\asserters\\phpObject');
+        $this->testedClass->isSubclassOf('\\atoum\\atoum\\asserters\\phpObject');
     }
 
     public function test__construct()
@@ -48,14 +49,14 @@ class Element extends atoum\test
                 ->exception(function () use ($object, $value) {
                     $object->setWith($value);
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('%s is not an object'), $object->getAnalyzer()->getTypeOf($value)))
-            ->and($value = new \StdClass())
+            ->and($value = new \stdClass())
             ->then
                 ->exception(function () use ($object, $value) {
                     $object->setWith($value);
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('%s is not a crawler'), $object->getAnalyzer()->getTypeOf($value)))
             ->if($crawler = new \Symfony\Component\DomCrawler\Crawler())
             ->then
@@ -90,23 +91,23 @@ class Element extends atoum\test
             ->if($generator = new asserter\generator())
             ->and($object = new TestedClass($generator))
             ->and($elem = new \DOMElement(uniqid('_'), 'a value'))
-            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($elem)))
+            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler([$elem]))
             ->and($object->setWith($crawler))
             ->then
                 ->object($object->hasContent())->isIdenticalTo($object)
             ->if($emptyElem = new \DOMElement(uniqid('_'), ''))
-            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($emptyElem)))
+            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler([$emptyElem]))
             ->and($object->setWith($crawler))
             ->then
                 ->exception(function () use ($object) {
                     $object->hasContent();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected any content, found an empty value.')))
             ->if($elem = new \DOMElement(uniqid('_'), 'ab value'))
-            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler(array($elem)))
+            ->and($crawler = new \mock\Symfony\Component\DomCrawler\Crawler([$elem]))
             ->and($this->calling($crawler)->reduce = function (\Closure $closure) use ($elem) {
-                $value = array();
+                $value = [];
                 if (false !== $closure($elem)) {
                     $value[] = $elem;
                 }
@@ -116,8 +117,8 @@ class Element extends atoum\test
             ->and($object->setWith($crawler))
             ->then
                 ->object($object->hasContent())->isIdenticalTo($object)
-            ->if ($this->calling($crawler)->reduce = function (\Closure $closure) use ($elem, & $tempCrawler) {
-                $value = array();
+            ->if($this->calling($crawler)->reduce = function (\Closure $closure) use ($elem, &$tempCrawler) {
+                $value = [];
                 if (false !== $closure($tempCrawler = new \mock\Symfony\Component\DomCrawler\Crawler($elem))) {
                     $value[] = $elem;
                 }
@@ -138,12 +139,12 @@ class Element extends atoum\test
             ->and($value = uniqid())
             ->then
                 ->object($object->withAttribute($attribute, $value))->isIdenticalTo($object)
-                ->array($object->getAttributes())->isIdenticalTo(array($attribute => $value))
+                ->array($object->getAttributes())->isIdenticalTo([$attribute => $value])
             ->if($otherAttribute = uniqid())
             ->and($otherValue = uniqid())
             ->then
                 ->object($object->withAttribute($otherAttribute, $otherValue))->isIdenticalTo($object)
-                ->array($object->getAttributes())->isIdenticalTo(array($attribute => $value, $otherAttribute => $otherValue))
+                ->array($object->getAttributes())->isIdenticalTo([$attribute => $value, $otherAttribute => $otherValue])
         ;
     }
 
@@ -225,7 +226,7 @@ class Element extends atoum\test
                 ->exception(function () use ($object) {
                     $object->hasChild(uniqid());
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*', 0))
             ->if($this->calling($crawler)->count = 1)
             ->then
@@ -249,7 +250,7 @@ class Element extends atoum\test
                 ->exception(function () use ($object) {
                     $object->end();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*', 0))
             ->if($this->calling($crawler)->count = 1)
             ->then
@@ -259,7 +260,7 @@ class Element extends atoum\test
                 ->exception(function () use ($object) {
                     $object->end();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 2, '*', 1))
             ->if($this->calling($crawler)->count = 3)
             ->then
@@ -269,14 +270,14 @@ class Element extends atoum\test
                 ->exception(function () use ($object) {
                     $object->end();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected at most %d element(s) matching %s, found %d.'), 2, '*', 3))
             ->if($object->exactly(2))
             ->then
                 ->exception(function () use ($object) {
                     $object->end();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
                     ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*', 3))
             ->if($this->calling($crawler)->count = 2)
             ->then
@@ -288,15 +289,15 @@ class Element extends atoum\test
             ->and($object->setParent($parent))
             ->and($elem = $document->createElement(uniqid('_')))
             ->and($otherElem = $document->createElement(uniqid('_')))
-            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler(array($elem, $otherElem)))
+            ->and($crawler = new \Symfony\Component\DomCrawler\Crawler([$elem, $otherElem]))
             ->and($object->setWith($crawler))
             ->and($object->withAttribute($attr = uniqid('_'), $value = uniqid()))
             ->then
                 ->exception(function () use ($object) {
                     $object->end();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*[' . $attr . '="' . $value . '"]', 0))
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected at least %d element(s) matching %s, found %d.'), 1, '*['.$attr.'="'.$value.'"]', 0))
             ->if($elem->setAttribute($attr, $value))
             ->then
                 ->object($object->end())->isIdenticalTo($parent)
@@ -305,15 +306,15 @@ class Element extends atoum\test
                 ->exception(function () use ($object) {
                     $object->end();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*[' . $attr . '="' . $value . '"]', 1))
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*['.$attr.'="'.$value.'"]', 1))
             ->if($object->withContent($content = uniqid()))
             ->then
                 ->exception(function () use ($object) {
                     $object->end();
                 })
-                    ->isInstanceOf('mageekguy\atoum\asserter\exception')
-                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*[' . $attr . '="' . $value . '"][@content="' . $content . '"]', 0))
+                    ->isInstanceOf('atoum\atoum\asserter\exception')
+                    ->hasMessage(sprintf($generator->getLocale()->_('Expected %d element(s) matching %s, found %d.'), 2, '*['.$attr.'="'.$value.'"][@content="'.$content.'"]', 0))
         ;
     }
 }
